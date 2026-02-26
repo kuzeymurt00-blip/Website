@@ -3,632 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Absolute Studios | Official Website</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <script type="importmap">
-      {
-        "imports": {
-          "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
-          "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
-          "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
-          "firebase/database": "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"
-        }
-      }
-    </script>
-
+    <title>Absolute Studios | HUB</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        :root {
-            --primary: #6366f1;
-            --accent: #a855f7;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --white: #ffffff;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-sub: #475569;
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #e9ecef; }
+
+        .container {
+            position: relative; width: 900px; height: 600px; background: #fff;
+            border-radius: 30px; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden;
         }
 
-        body.dark-mode {
-            --light: #020617;
-            --card-bg: #0f172a;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --white: #0f172a;
+        .form-box {
+            position: absolute; top: 0; width: 50%; height: 100%; display: flex;
+            flex-direction: column; justify-content: center; padding: 40px; transition: .6s ease-in-out;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--text-main); overflow-x: hidden; transition: background 0.5s ease, color 0.5s ease; }
+        /* Sol Taraf (Başvuru Sorgula ve Duyurular) */
+        .form-box.login { left: 0; }
+        .container.active .form-box.login { left: -50%; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        /* Sağ Taraf (Başvuru Yap) */
+        .form-box.register { left: 100%; }
+        .container.active .form-box.register { left: 50%; }
 
-        .animate { animation: fadeIn 0.8s ease-out forwards; }
+        h1 { font-size: 24px; text-align: center; margin-bottom: 15px; color: #333; }
+        .duyuru-box { background: #f8f9fa; padding: 10px; border-radius: 10px; font-size: 13px; border-left: 4px solid #7d2ae8; margin-bottom: 20px; color: #555; }
 
-        #announcement-bar {
-            display: none; background: linear-gradient(90deg, var(--primary), var(--accent));
-            color: white; padding: 8px 0; overflow: hidden; white-space: nowrap;
-            font-weight: 700; font-size: 0.9rem; position: sticky; top: 0; z-index: 1001;
+        .input-box { position: relative; width: 100%; height: 45px; margin: 15px 0; }
+        .input-box input, .input-box select, .input-box textarea {
+            width: 100%; height: 100%; background: #f0f2f5; border: none; outline: none;
+            border-radius: 10px; padding: 0 45px 0 15px; font-size: 14px;
         }
-        .marquee-text { display: inline-block; animation: marquee 20s linear infinite; padding-left: 100%; }
+        .input-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #7d2ae8; }
 
-        nav {
-            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px);
-            padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
+        .btn {
+            width: 100%; height: 45px; background: #7d2ae8; border: none; border-radius: 10px;
+            color: #fff; font-weight: 600; cursor: pointer; transition: .3s; margin-top: 10px;
         }
-        body.dark-mode nav { border-bottom-color: rgba(255,255,255,0.05); background: rgba(2, 6, 23, 0.8); }
-        .logo { font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--primary); letter-spacing: -1px; }
-        .nav-controls { display: flex; align-items: center; gap: 1rem; }
-        
-        .online-counter { font-size: 0.8rem; background: #22c55e; color: white; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+        .btn:hover { background: #6610f2; transform: translateY(-2px); }
 
-        .btn-main { 
-            padding: 0.7rem 1.5rem; border-radius: 12px; border: none; 
-            background: var(--dark); color: white; cursor: pointer; 
-            font-weight: 600; transition: var(--transition); text-decoration: none;
-            display: inline-block; text-align: center;
+        /* Kayan Panel Tasarımı */
+        .toggle-box { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; transition: .6s ease-in-out; }
+        .container.active .toggle-box { left: 0; }
+        .toggle-panel {
+            position: absolute; width: 100%; height: 100%; background: #7d2ae8;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #fff; transition: .6s ease-in-out; text-align: center;
         }
-        body.dark-mode .btn-main { background: var(--primary); }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(99,102,241,0.3); }
+        .toggle-left { right: 0; transform: translateX(0); border-radius: 0 150px 150px 0; }
+        .container.active .toggle-left { transform: translateX(-100%); border-radius: 0; }
+        .toggle-right { left: 100%; transform: translateX(0); border-radius: 150px 0 0 150px; }
+        .container.active .toggle-right { transform: translateX(-100%); border-radius: 0; }
 
-        .btn-outline {
-            background: transparent; border: 2px solid var(--primary); color: var(--primary);
-            padding: 0.6rem 1.4rem; border-radius: 12px; font-weight: 700; cursor: pointer;
-            transition: var(--transition); text-decoration: none; display: inline-block; text-align: center;
-        }
-        .btn-outline:hover { background: var(--primary); color: white; }
+        .toggle-btn { width: 160px; height: 45px; background: transparent; border: 2px solid #fff; border-radius: 10px; color: #fff; cursor: pointer; margin-top: 20px; }
 
-        .hero { padding: 80px 5%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem; align-items: center; }
-        .hero h1 { font-family: 'Manrope', sans-serif; font-size: 3.5rem; line-height: 1.1; margin-bottom: 1.5rem; }
-        
-        .stats-bar { display: flex; justify-content: space-around; padding: 40px 5%; max-width: 1200px; margin: 0 auto; gap: 20px; flex-wrap: wrap; }
-        .stat-item { background: var(--card-bg); padding: 20px; border-radius: 20px; text-align: center; min-width: 150px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .stat-number { display: block; font-size: 2rem; font-weight: 800; color: var(--primary); }
-        .stat-label { font-size: 0.9rem; color: var(--text-sub); font-weight: 600; }
-
-        .achievements-section { padding: 60px 5%; max-width: 1200px; margin: 0 auto; }
-        .ach-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
-        .ach-card { 
-            background: var(--card-bg); padding: 25px; border-radius: 25px; 
-            text-align: center; border: 2px solid rgba(0,0,0,0.03); 
-            transition: var(--transition);
-        }
-        .ach-card:hover { transform: scale(1.05); border-color: var(--accent); }
-        .ach-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
-        .ach-title { font-weight: 800; display: block; margin-bottom: 5px; color: var(--text-main); }
-        .ach-desc { font-size: 0.8rem; color: var(--text-sub); }
-
-        .hub-section { text-align: center; padding: 60px 5%; background: var(--dark); color: white; margin: 40px 0; border-radius: 0; position: relative; }
-        body.dark-mode .hub-section { background: #020617; border-top: 1px solid rgba(255,255,255,0.1); }
-        
-        .dl-btn {
-            background: white; color: #0f172a; padding: 1.2rem 3.5rem; 
-            font-size: 1.4rem; border-radius: 20px; font-weight: 800;
-            animation: pulse 2s infinite; display: inline-block; text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .games-section { padding: 60px 5%; max-width: 1200px; margin: 0 auto; }
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-        .game-card { 
-            background: var(--card-bg); border-radius: 35px; padding: 30px; 
-            transition: var(--transition); border: 1px solid rgba(0,0,0,0.05);
-            display: flex; flex-direction: column; justify-content: space-between;
-            min-height: 250px;
-        }
-        .game-card:hover { transform: translateY(-15px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .game-status { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; padding: 4px 12px; border-radius: 50px; display: inline-block; margin-bottom: 15px; }
-        .status-released { background: #dcfce7; color: #166534; }
-        .status-demo { background: #fef9c3; color: #854d0e; }
-        .status-dev { background: #fee2e2; color: #991b1b; }
-
-        #friends-panel, #dev-panel, #admin-panel {
-            position: fixed; inset: 0; background: var(--light); z-index: 2500;
-            display: none; overflow-y: auto; padding: 100px 5%; animation: fadeIn 0.5s ease forwards;
-        }
-
-        #chat-window {
-            position: fixed; bottom: 20px; right: 20px; width: 320px; height: 400px;
-            background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            display: none; flex-direction: column; z-index: 3000; border: 2px solid var(--primary);
-        }
-        .chat-header { padding: 15px; background: var(--primary); color: white; border-radius: 18px 18px 0 0; display: flex; justify-content: space-between; align-items: center; }
-        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .chat-input-area { padding: 10px; display: flex; gap: 5px; border-top: 1px solid rgba(0,0,0,0.1); }
-        .message { padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 0.9rem; word-wrap: break-word; position: relative; }
-        .msg-me { background: var(--primary); color: white; align-self: flex-end; }
-        .msg-them { background: #e2e8f0; color: black; align-self: flex-start; }
-        .msg-global { border-left: 4px solid var(--accent); }
-        .msg-time { font-size: 0.65rem; opacity: 0.7; margin-top: 4px; display: block; text-align: right; }
-
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); place-items: center; z-index: 2000; backdrop-filter: blur(12px); }
-        .modal-content { background: var(--card-bg); color: var(--text-main); padding: 2.5rem; border-radius: 30px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 1rem; position: relative; }
-        .modal-tabs { display: flex; gap: 20px; border-bottom: 2px solid rgba(0,0,0,0.05); margin-bottom: 10px; }
-        .tab { padding-bottom: 10px; cursor: pointer; font-weight: 700; color: var(--text-sub); transition: 0.3s; }
-        .tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-        input, select { padding: 14px; border: 2px solid rgba(0,0,0,0.05); border-radius: 12px; outline: none; background: rgba(0,0,0,0.02); color: var(--text-main); }
-        .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-sub); }
-
-        .global-badge {
-            background: var(--accent); color: white; padding: 15px; border-radius: 20px;
-            margin-bottom: 25px; cursor: pointer; display: flex; justify-content: space-between;
-            align-items: center; font-weight: 800; transition: 0.3s;
-        }
-
-        .admin-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; color: #000; border-left: 5px solid #ef4444; }
-        .del-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        
-        #dev-loader { position: fixed; inset: 0; background: #0f172a; z-index: 5000; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .loader-bar { width: 0; height: 4px; background: var(--primary); box-shadow: 0 0 20px var(--primary); }
-        .loader-text { color: white; font-family: 'Manrope'; font-weight: 800; font-size: 1.5rem; margin-bottom: 20px; letter-spacing: 5px; opacity: 0; }
-        @keyframes barGrow { from { width: 0; } to { width: 250px; } }
-        @keyframes textFade { 0% { opacity: 0; transform: translateY(10px); } 50% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
+        /* Admin Ekranı */
+        #admin-screen { display: none; padding: 30px; height: 100%; overflow-y: auto; }
+        .admin-card { border: 1px solid #eee; padding: 15px; border-radius: 15px; margin-bottom: 10px; position: relative; }
+        .badge { position: absolute; top: 10px; right: 10px; padding: 3px 8px; border-radius: 5px; font-size: 10px; color: white; }
     </style>
 </head>
 <body>
 
-    <div id="announcement-bar"><div class="marquee-text" id="ann-text"></div></div>
-
-    <div id="dev-loader">
-        <div class="loader-text" id="loader-txt">DEVELOPERS</div>
-        <div class="loader-bar" id="loader-bar"></div>
-    </div>
-
-    <div id="admin-panel">
-        <button class="btn-main" id="close-admin" style="position:fixed; top:30px; right:5%;">← Kapat</button>
-        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-            <h2 style="font-size: 2.5rem; margin-bottom: 20px;">👑 Absolute Yönetim</h2>
+    <div class="container" id="mainContainer">
+        
+        <div class="form-box login">
+            <h1>Stüdyo Haberleri</h1>
+            <div id="announcement" class="duyuru-box">Yükleniyor...</div>
             
-            <div style="background:var(--card-bg); padding:20px; border-radius:20px; margin-bottom:20px; border: 2px solid var(--primary);">
-                <h3>Global Duyuru</h3>
-                <input type="text" id="admin-ann-input" placeholder="Duyuru Yaz..." style="width:70%;">
-                <button class="btn-main" id="post-ann">Duyur</button>
+            <h1 style="margin-top: 20px;">Başvuru Durumu</h1>
+            <p style="font-size: 12px; color: #666; text-align: center;">E-postan ile sonucunu kontrol et.</p>
+            <div class="input-box">
+                <input type="email" id="checkEmail" placeholder="E-posta adresin">
+                <i class='bx bx-search'></i>
             </div>
-
-            <div style="background:var(--card-bg); padding:20px; border-radius:20px; margin-bottom:20px; border: 2px solid #fbbf24;">
-                <h3>🛡️ Admin Yönetimi</h3>
-                <input type="email" id="new-admin-email" placeholder="Admin E-postası..." style="width:70%;">
-                <button class="btn-main" id="add-admin-btn" style="background:#fbbf24;">Admin Ekle</button>
-                <div id="admins-list" style="margin-top:15px; text-align:left; color:#000;"></div>
-            </div>
-
-            <h3 style="margin-bottom:15px;">Global Sohbet Denetimi</h3>
-            <div id="admin-chat-list"></div>
+            <button class="btn" onclick="checkStatus()">Sorgula</button>
+            <p id="statusResult" style="margin-top: 15px; font-weight: bold; text-align: center; font-size: 14px;"></p>
         </div>
+
+        <div class="form-box register">
+            <h1>Ekibe Katıl</h1>
+            <div class="input-box"><input type="text" id="regName" placeholder="Ad Soyad"><i class='bx bxs-user'></i></div>
+            <div class="input-box"><input type="email" id="regEmail" placeholder="E-posta"><i class='bx bxs-envelope'></i></div>
+            <div class="input-box">
+                <select id="regRole"><option value="Yazılım">Yazılım</option><option value="Tasarım">Tasarım</option><option value="Ses">Ses/Müzik</option></select>
+            </div>
+            <div class="input-box" style="height: 60px;"><textarea id="regMsg" placeholder="Neden biz?" style="padding-top:10px;"></textarea></div>
+            <button class="btn" onclick="sendApp()">Başvuruyu Tamamla</button>
+        </div>
+
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Absolute Studios</h1>
+                <p>Yeni bir başvuru mu yapacaksın?</p>
+                <button class="toggle-btn" id="toRegister">Başvuru Formu</button>
+                <p style="margin-top: 40px; font-size: 10px; opacity: 0.6;" onclick="adminLoginPrompt()">YÖNETİCİ GİRİŞİ</p>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h1>Hoş Geldin!</h1>
+                <p>Başvuru durumunu görmek ve haberleri okumak için tıkla.</p>
+                <button class="toggle-btn" id="toLogin">Durum Sorgula</button>
+            </div>
+        </div>
+
+        <div id="admin-screen">
+            <h1>Yönetim Paneli</h1>
+            <div class="input-box"><input type="text" id="newAnnounce" placeholder="Yeni Duyuru Yaz..."><button class="btn" onclick="updateAnnounce()" style="height: 35px; width: 100px;">Yayınla</button></div>
+            <div id="admin-list"></div>
+            <button class="btn" style="background: #333;" onclick="location.reload()">Çıkış</button>
+        </div>
+
     </div>
 
-    <div id="friends-panel">
-        <button class="btn-main" id="close-friends" style="position:fixed; top:30px; right:5%;">← Kapat</button>
-        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-            <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Absolute Topluluğu</h2>
-            <div class="global-badge" id="global-trigger">
-                <span>🌍 GLOBAL GRUP SOHBETİ</span>
-                <span style="background:white; color:var(--accent); padding:2px 10px; border-radius:10px; font-size:0.8rem;">HERKES BURADA</span>
-            </div>
-            <div id="friends-list"></div>
-        </div>
-    </div>
+    <script>
+        (function(){ emailjs.init("woztt-c1zUwx7MrFT"); })();
 
-    <div id="dev-panel">
-        <button class="btn-main" id="close-dev" style="position:fixed; top:30px; right:5%;">← Kapat</button>
-        <div style="text-align: center;">
-            <h2 style="font-size: 3rem; margin-bottom: 40px;">Absolute Ekibi</h2>
-            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <div class="game-card" style="width:220px;"><h3>Kuzey</h3><p>Lead Dev</p></div>
-                <div class="game-card" style="width:220px;"><h3>İsmail Arda</h3><p>Logo Designer</p></div>
-                <div class="game-card" style="width:220px;"><h3>Hayrettin Efe</h3><p>Art Director</p></div>
-                <div class="game-card" style="width:220px;"><h3>Çağrı Furkan</h3><p>Narrative Designer</p></div>
-                <div class="game-card" style="width:220px;"><h3>Yakup</h3><p>Junior Developer</p></div>
-            </div>
-        </div>
-    </div>
+        const container = document.getElementById('mainContainer');
+        const toRegister = document.getElementById('toRegister');
+        const toLogin = document.getElementById('toLogin');
 
-    <div id="chat-window">
-        <div class="chat-header">
-            <span id="chat-with-name">Sohbet</span>
-            <button onclick="document.getElementById('chat-window').style.display='none'" style="background:none; border:none; color:white; cursor:pointer; font-size: 1.2rem;">✕</button>
-        </div>
-        <div class="chat-messages" id="chat-messages"></div>
-        <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Mesaj yaz..." style="flex:1">
-            <button class="btn-main" id="send-msg">></button>
-        </div>
-    </div>
+        // Veriler
+        let apps = JSON.parse(localStorage.getItem('absoluteApps')) || [];
+        let archived = JSON.parse(localStorage.getItem('absoluteArchive')) || []; // Sonuçlananlar
+        let announcement = localStorage.getItem('absoluteNews') || "Absolute Studios'a hoş geldiniz! Henüz yeni bir duyuru yok.";
 
-    <nav>
-        <div class="logo">ABSOLUTE</div>
-        <div class="nav-controls">
-            <div class="online-counter" id="online-val">Online: ..</div>
-            <button class="theme-toggle" id="theme-btn" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">🌙</button>
-            <button class="btn-outline" id="admin-trigger" style="display:none; border-color:#fbbf24; color:#fbbf24;">👑 Yönetim</button>
-            <button class="btn-outline" id="friends-trigger" style="display:none;">👥 Topluluk</button>
-            <span id="user-name" style="font-weight: 700; color: var(--primary); display: none;"></span>
-            <button class="btn-main" id="login-trigger">Giriş / Kayıt Ol</button>
-            <button class="btn-main" id="logout-btn" style="display:none; background:#ef4444;">Çıkış</button>
-        </div>
-    </nav>
+        document.getElementById('announcement').innerText = announcement;
 
-    <header class="hero animate">
-        <div>
-            <h1>Hayallerinizi <span style="color:var(--primary)">Piksel Piksel</span> İnşa Ediyoruz.</h1>
-            <p>Ben Kuzey. 11 yaşında bir oyun geliştiricisi olarak Absolute Studios bünyesinde yeni nesil oyun deneyimleri tasarlıyorum.</p>
-            <div style="margin-top: 20px; display: flex; gap: 10px;">
-                <button class="btn-main" id="dev-trigger">Geliştiriciler</button>
-                <a href="#oyunlar" class="btn-outline">Oyunları Gör</a>
-            </div>
-        </div>
-        <div style="background: linear-gradient(135deg, var(--primary), var(--accent)); height: 300px; border-radius: 40px; display: grid; place-items: center; font-size: 5rem; animation: float 6s ease-in-out infinite;">🎮</div>
-    </header>
+        toRegister.onclick = () => container.classList.add('active');
+        toLogin.onclick = () => container.classList.remove('active');
 
-    <section class="stats-bar animate">
-        <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">Oyun</span></div>
-        <div class="stat-item"><span class="stat-number">40</span><span class="stat-label">Abone</span></div>
-        <div class="stat-item"><span class="stat-number">GameHub</span><span class="stat-label">Launcher</span></div>
-    </section>
-
-    <section class="achievements-section animate">
-        <h2 style="text-align: center; font-family: 'Manrope'; font-size: 2.2rem;">Absolute Başarımları</h2>
-        <div class="ach-grid">
-            <div class="ach-card">
-                <span class="ach-icon">🥇</span>
-                <span class="ach-title">İlk Adım</span>
-                <p class="ach-desc">Absolute topluluğuna katıldın.</p>
-            </div>
-            <div class="ach-card">
-                <span class="ach-icon">🔥</span>
-                <span class="ach-title">Aktif Oyuncu</span>
-                <p class="ach-desc">Bir günde 3 saat oyun oynadın.</p>
-            </div>
-            <div class="ach-card">
-                <span class="ach-icon">💬</span>
-                <span class="ach-title">Sohbet Ustası</span>
-                <p class="ach-desc">Global sohbette 100 mesaj gönderdin.</p>
-            </div>
-            <div class="ach-card">
-                <span class="ach-icon">🚀</span>
-                <span class="ach-title">Tester</span>
-                <p class="ach-desc">Bir oyunun demosunu ilk sen denedin.</p>
-            </div>
-            <div class="ach-card">
-                <span class="ach-icon">💎</span>
-                <span class="ach-title">Destekçi</span>
-                <p class="ach-desc">Absolute ekibine geri bildirim verdin.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="hub-section animate">
-        <h2 style="font-size: 2.5rem; margin-bottom: 10px;">Absolute Hub'ı Keşfet</h2>
-        <p style="margin-bottom: 25px; opacity: 0.8;">Oyunlarımızı tek bir panelden yönet.</p>
-        <a href="https://www.dropbox.com/scl/fi/mu2drak3g7xmchmfhyo26/AbsoluteClient.zip?rlkey=3ku8kozboim9tpxx9let5luov&st=ucdd0bq0&dl=1" class="dl-btn">🚀 Launcher İndir</a>
-    </section>
-
-    <section class="games-section animate" id="oyunlar">
-        <h2 style="margin-bottom: 40px; font-family: 'Manrope'; text-align: center;">Oyun Kütüphanesi</h2>
-        <div class="game-grid">
-            <div class="game-card">
-                <div><span class="game-status status-released">Çıktı</span><h3>Valozırto</h3><p>Rekabetçi FPS deneyimi.</p></div>
-                <div class="game-actions" style="margin-top: 20px; display: flex; gap: 10px;">
-                    <a href="https://www.youtube.com/watch?v=dwfxxU61iMA" target="_blank" class="btn-main">İzle 🎬</a>
-                    <a href="https://www.youtube.com/watch?v=dwfxxU61iMA&list=PLK3TiDySmpLXF6NsuhlK1aVFqxB7MzlSy" target="_blank" class="btn-outline">Detaylar 📁</a>
-                </div>
-            </div>
-            <div class="game-card">
-                <div><span class="game-status status-demo">Demo</span><h3>I'm Behind You</h3><p>Korku dolu bir saklambaç.</p></div>
-                <div class="game-actions" style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button class="btn-main" style="opacity: 0.7;">Hub'da Oyna</button>
-                    <a href="https://www.youtube.com/watch?v=_t1wQRKa05U&list=PLK3TiDySmpLVk8kcnSHEYWIXi68S16JHG" target="_blank" class="btn-outline">Detaylar 📁</a>
-                </div>
-            </div>
-            <div class="game-card">
-                <div><span class="game-status status-dev">Geliştiriliyor</span><h3>Hit Me!</h3><p>Refleks odaklı aksiyon oyunu.</p></div>
-                <div class="game-actions" style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button class="btn-main" style="cursor: default;">Beklemede</button>
-                    <a href="https://www.youtube.com/@QLoLwTR1/playlists" target="_blank" class="btn-outline">Detaylar 📁</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="modal" id="login-modal">
-        <div class="modal-content">
-            <button class="close-btn" id="close-m">✕</button>
-            <div class="modal-tabs">
-                <div class="tab active" id="tab-login">Giriş Yap</div>
-                <div class="tab" id="tab-signup">Kayıt Ol</div>
-            </div>
-            <h3 id="modal-title">Hoş Geldin!</h3>
-            <input type="email" id="email" placeholder="E-posta">
-            <input type="password" id="password" placeholder="Şifre">
-            <div id="signup-extras" style="display:none; flex-direction:column; gap:10px;">
-                <select id="avatar-select">
-                    <option value="🤖">Robot İkonu</option>
-                    <option value="⚔️">Savaşçı İkonu</option>
-                    <option value="🚀">Uzaylı İkonu</option>
-                    <option value="🔥">Ateş İkonu</option>
-                    <option value="💎">Elmas İkonu</option>
-                </select>
-            </div>
-            <button class="btn-main" id="auth-btn" style="width: 100%;">İşlem Yap</button>
-        </div>
-    </div>
-
-    <footer style="text-align: center; padding: 30px; background: #000; color: white; opacity: 0.5;">
-        © 2026 Absolute Studios | Made by Kuziceo
-    </footer>
-
-    <script type="module">
-        import { initializeApp } from "firebase/app";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, deleteDoc } from "firebase/firestore";
-        import { getDatabase, ref, onValue, set, onDisconnect } from "firebase/database";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyC29HXKSTcXx5-BuLrt6h8iH4BUh3jnNes",
-            authDomain: "absolutebisite.firebaseapp.com",
-            projectId: "absolutebisite",
-            storageBucket: "absolutebisite.firebasestorage.app",
-            messagingSenderId: "648450986989",
-            appId: "1:648450986989:web:17ff5e9a4ffd1577354de4",
-            databaseURL: "https://absolutebisite-default-rtdb.firebaseio.com/"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const rtdb = getDatabase(app);
-
-        let currentUser = null;
-        let userData = null;
-        let authMode = 'login';
-        let activeChat = null;
-        let chatUnsubscribe = null;
-
-        const yasakliKelimeler = ["amk", "aq", "oç", "piç", "siktir", "sik", "yarrak", "göt", "amcık", "meme", "daşşak", "pezevenk", "kahpe", "fahişe", "it", "köpek", "gerizekalı", "salak"]; 
-        function kufurFiltrele(metin) {
-            let temizMetin = metin;
-            yasakliKelimeler.forEach(kelime => {
-                const regex = new RegExp(kelime, "gi");
-                temizMetin = temizMetin.replace(regex, "***");
-            });
-            return temizMetin;
+        // Admin Giriş (Gizli tık ile açılır)
+        function adminLoginPrompt() {
+            let u = prompt("Admin Kullanıcı:");
+            let p = prompt("Admin Şifre:");
+            if(u === 'qlolw' && p === 'qlolw') {
+                document.querySelectorAll('.form-box, .toggle-box').forEach(el => el.style.display = 'none');
+                document.getElementById('admin-screen').style.display = 'block';
+                renderAdmin();
+            }
         }
 
-        const onlineRef = ref(rtdb, '.info/connected');
-        onValue(onlineRef, (snap) => {
-            if (snap.val() === true) {
-                const myStatusRef = ref(rtdb, 'status/' + Math.random().toString(36).substr(2, 9));
-                set(myStatusRef, true);
-                onDisconnect(myStatusRef).remove();
-            }
-        });
-        onValue(ref(rtdb, 'status'), (snap) => {
-            const count = snap.exists() ? Object.keys(snap.val()).length : 0;
-            const counterEl = document.getElementById('online-val');
-            if(counterEl) counterEl.innerText = `Online: ${count}`;
-        });
+        // Başvuru Gönder
+        function sendApp() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const role = document.getElementById('regRole').value;
+            const msg = document.getElementById('regMsg').value;
 
-        onSnapshot(doc(db, "settings", "announcement"), (doc) => {
-            if(doc.exists() && doc.data().text) {
-                document.getElementById('announcement-bar').style.display = 'block';
-                document.getElementById('ann-text').innerText = doc.data().text;
-            } else {
-                document.getElementById('announcement-bar').style.display = 'none';
-            }
-        });
-
-        const themeBtn = document.getElementById('theme-btn');
-        themeBtn.onclick = () => {
-            document.body.classList.toggle('dark-mode');
-            themeBtn.innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        };
-
-        const tabLogin = document.getElementById('tab-login');
-        const tabSignup = document.getElementById('tab-signup');
-        const authBtn = document.getElementById('auth-btn');
-
-        tabLogin.onclick = () => { authMode = 'login'; tabLogin.classList.add('active'); tabSignup.classList.remove('active'); authBtn.innerText = "Giriş Yap"; document.getElementById('signup-extras').style.display='none'; };
-        tabSignup.onclick = () => { authMode = 'signup'; tabSignup.classList.add('active'); tabLogin.classList.remove('active'); authBtn.innerText = "Kayıt Ol"; document.getElementById('signup-extras').style.display='flex'; };
-
-        document.getElementById('login-trigger').onclick = () => document.getElementById('login-modal').style.display = 'grid';
-        document.getElementById('close-m').onclick = () => document.getElementById('login-modal').style.display = 'none';
-
-        authBtn.onclick = async () => {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            const avatar = document.getElementById('avatar-select').value;
-            try {
-                if(authMode === 'login') {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                } else {
-                    const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    await setDoc(doc(db, "all_users", res.user.uid), { 
-                        username: email.split('@')[0], 
-                        email: email,
-                        avatar: avatar 
-                    });
-                }
-                document.getElementById('login-modal').style.display = 'none';
-            } catch (e) { alert(e.message); }
-        };
-
-        document.getElementById('logout-btn').onclick = () => signOut(auth);
-
-        onAuthStateChanged(auth, async (user) => {
-            currentUser = user;
-            // ANA ADMİN (Değiştirme, her zaman yetkili kalsın)
-            const mainAdmin = "kuzeymurt00@gmail.com";
-            
-            if (user) {
-                const userDoc = await getDoc(doc(db, "all_users", user.uid));
-                userData = userDoc.data();
-                document.getElementById('user-name').innerText = `${userData?.avatar || ''} ${userData?.username}`;
-                document.getElementById('user-name').style.display = 'block';
-                document.getElementById('logout-btn').style.display = 'block';
-                document.getElementById('login-trigger').style.display = 'none';
-                document.getElementById('friends-trigger').style.display = 'inline-block';
-                
-                // Firestore'daki "admins" koleksiyonundan kontrol et
-                const adminDoc = await getDoc(doc(db, "admins", user.email));
-                
-                if(user.email === mainAdmin || adminDoc.exists()) {
-                    document.getElementById('admin-trigger').style.display = 'inline-block';
-                    loadAdminPanel();
-                    loadAdminsList(); // Adminleri listele
-                }
-                loadAllUsers();
-            } else {
-                document.getElementById('user-name').style.display = 'none';
-                document.getElementById('logout-btn').style.display = 'none';
-                document.getElementById('login-trigger').style.display = 'block';
-                document.getElementById('friends-trigger').style.display = 'none';
-                document.getElementById('admin-trigger').style.display = 'none';
-            }
-        });
-
-        // Yeni Admin Ekleme
-        document.getElementById('add-admin-btn').onclick = async () => {
-            const email = document.getElementById('new-admin-email').value;
-            if(!email) return alert("Lütfen e-posta girin!");
-            await setDoc(doc(db, "admins", email), { email: email, addedAt: Date.now() });
-            alert(email + " artık bir admin!");
-            document.getElementById('new-admin-email').value = "";
-        };
-
-        // Admin Listesini Göster
-        function loadAdminsList() {
-            const listDiv = document.getElementById('admins-list');
-            onSnapshot(collection(db, "admins"), (snap) => {
-                listDiv.innerHTML = "<strong>Mevcut Adminler:</strong><br>";
-                snap.forEach(d => {
-                    listDiv.innerHTML += `• ${d.id} <button onclick="window.removeAdmin('${d.id}')" style="background:red; color:white; border:none; border-radius:5px; cursor:pointer; font-size:0.7rem;">Sil</button><br>`;
-                });
-            });
+            if(!name || !email || !msg) return alert("Eksik bilgi!");
+            apps.push({ name, email, role, msg, status: 'BEKLEMEDE' });
+            localStorage.setItem('absoluteApps', JSON.stringify(apps));
+            alert("Başvuru alındı! Durum Sorgula kısmından takip edebilirsin.");
+            location.reload();
         }
 
-        window.removeAdmin = async (email) => {
-            if(confirm(email + " yetkisini almak istiyor musun?")) {
-                await deleteDoc(doc(db, "admins", email));
-            }
-        };
+        // Durum Sorgula
+        function checkStatus() {
+            const email = document.getElementById('checkEmail').value;
+            const resultDisplay = document.getElementById('statusResult');
+            
+            let found = apps.find(a => a.email === email) || archived.find(a => a.email === email);
 
-        document.getElementById('post-ann').onclick = async () => {
-            const txt = document.getElementById('admin-ann-input').value;
-            await setDoc(doc(db, "settings", "announcement"), { text: txt });
+            if(found) {
+                resultDisplay.innerText = `DURUM: ${found.status}`;
+                resultDisplay.style.color = found.status === 'ONAYLANDI' ? 'green' : (found.status === 'REDDEDİLDİ' ? 'red' : 'orange');
+            } else {
+                resultDisplay.innerText = "Başvuru bulunamadı.";
+                resultDisplay.style.color = "black";
+            }
+        }
+
+        function updateAnnounce() {
+            const txt = document.getElementById('newAnnounce').value;
+            localStorage.setItem('absoluteNews', txt);
             alert("Duyuru güncellendi!");
-        };
+            location.reload();
+        }
 
-        document.getElementById('admin-trigger').onclick = () => document.getElementById('admin-panel').style.display = 'block';
-        document.getElementById('close-admin').onclick = () => document.getElementById('admin-panel').style.display = 'none';
-
-        function loadAdminPanel() {
-            const adminList = document.getElementById('admin-chat-list');
-            const q = query(collection(db, "global_chat"), orderBy("time", "desc"));
-            onSnapshot(q, (snap) => {
-                adminList.innerHTML = "";
-                snap.forEach(d => {
-                    const data = d.data();
-                    const div = document.createElement('div');
-                    div.className = "admin-item";
-                    div.innerHTML = `<div><strong>${data.from}:</strong> ${data.text}</div> 
-                                     <button class="del-btn" onclick="window.deleteMsg('global_chat', '${d.id}')">Sil</button>`;
-                    adminList.appendChild(div);
-                });
+        function renderAdmin() {
+            const list = document.getElementById('admin-list');
+            list.innerHTML = apps.length === 0 ? "Bekleyen başvuru yok." : "";
+            apps.forEach((app, i) => {
+                list.innerHTML += `
+                    <div class="admin-card">
+                        <strong>${app.name}</strong> - ${app.role}<br>${app.msg}
+                        <div style="margin-top:10px;">
+                            <button onclick="handleApp(${i}, 'ONAYLANDI')" style="color:green; cursor:pointer;">Onayla</button>
+                            <button onclick="handleApp(${i}, 'REDDEDİLDİ')" style="color:red; margin-left:15px; cursor:pointer;">Reddet</button>
+                        </div>
+                    </div>`;
             });
         }
 
-        window.deleteMsg = async (col, id) => {
-            if(confirm("Bu mesajı silmek istediğine emin misin?")) {
-                await deleteDoc(doc(db, col, id));
-            }
-        };
-
-        document.getElementById('dev-trigger').onclick = () => {
-            const loader = document.getElementById('dev-loader');
-            loader.style.display = 'flex';
-            document.getElementById('loader-bar').style.animation = 'barGrow 1.5s forwards';
-            document.getElementById('loader-txt').style.animation = 'textFade 1.5s forwards';
-            setTimeout(() => { loader.style.display = 'none'; document.getElementById('dev-panel').style.display = 'block'; }, 1500);
-        };
-        document.getElementById('close-dev').onclick = () => document.getElementById('dev-panel').style.display = 'none';
-
-        document.getElementById('friends-trigger').onclick = () => document.getElementById('friends-panel').style.display = 'block';
-        document.getElementById('close-friends').onclick = () => document.getElementById('friends-panel').style.display = 'none';
-
-        function loadAllUsers() {
-            const list = document.getElementById('friends-list');
-            onSnapshot(collection(db, "all_users"), (snap) => {
-                list.innerHTML = "";
-                snap.forEach(d => {
-                    const u = d.data();
-                    if(u.username === userData?.username) return;
-                    const div = document.createElement('div');
-                    div.style = "padding:15px; background:white; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; color:#000; border:1px solid #eee;";
-                    div.innerHTML = `<span>${u.avatar || '👤'} ${u.username}</span> <button class="btn-main" style="padding:5px 15px; font-size:0.8rem;">Fısılda</button>`;
-                    div.onclick = () => { openChat(u.username); document.getElementById('friends-panel').style.display = 'none'; };
-                    list.appendChild(div);
-                });
-            });
-        }
-
-        document.getElementById('global-trigger').onclick = () => {
-            openChat("GLOBAL");
-            document.getElementById('friends-panel').style.display = 'none';
-        };
-
-        function openChat(name) {
-            activeChat = name;
-            document.getElementById('chat-window').style.display = 'flex';
-            document.getElementById('chat-with-name').innerText = name === "GLOBAL" ? "🌍 Global Grup" : name;
-            const msgDiv = document.getElementById('chat-messages');
+        function handleApp(index, stat) {
+            let app = apps[index];
+            app.status = stat;
             
-            if(chatUnsubscribe) chatUnsubscribe();
-            const colName = name === "GLOBAL" ? "global_chat" : "chats";
-            const q = query(collection(db, colName), orderBy("time", "asc"));
-            
-            chatUnsubscribe = onSnapshot(q, (snap) => {
-                msgDiv.innerHTML = "";
-                snap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    const me = userData?.username;
-                    let show = false;
-                    if(name === "GLOBAL") show = true;
-                    else if((data.from === me && data.to === name) || (data.from === name && data.to === me)) show = true;
-
-                    if(show) {
-                        const m = document.createElement('div');
-                        m.className = `message ${data.from === me ? 'msg-me' : 'msg-them'} ${name === "GLOBAL" ? 'msg-global' : ''}`;
-                        const time = data.time ? new Date(data.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
-                        m.innerHTML = `<strong>${data.from}:</strong><br>${data.text} <span class="msg-time">${time}</span>`;
-                        msgDiv.appendChild(m);
-                    }
-                });
-                msgDiv.scrollTop = msgDiv.scrollHeight;
+            // Mail gönder
+            emailjs.send('service_z6q6ij7', 'template_x6898bt', {
+                to_email: app.email, user_name: app.name, status: stat, from_name: "Absolute Studios"
             });
+
+            archived.push(app);
+            apps.splice(index, 1);
+            localStorage.setItem('absoluteApps', JSON.stringify(apps));
+            localStorage.setItem('absoluteArchive', JSON.stringify(archived));
+            alert("İşlem tamam, mail gönderildi.");
+            renderAdmin();
         }
-
-        document.getElementById('send-msg').onclick = async () => {
-            const input = document.getElementById('chat-input');
-            const me = userData?.username;
-            if(!input.value || !activeChat || !me) return;
-            const temizlenmisMesaj = kufurFiltrele(input.value);
-            const colName = activeChat === "GLOBAL" ? "global_chat" : "chats";
-            await addDoc(collection(db, colName), { 
-                from: me, 
-                to: activeChat, 
-                text: temizlenmisMesaj, 
-                time: Date.now() 
-            });
-            input.value = "";
-        };
-
-        document.getElementById('chat-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('send-msg').click(); };
-
     </script>
 </body>
 </html>
