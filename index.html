@@ -183,12 +183,21 @@
         <button class="btn-main" id="close-admin" style="position:fixed; top:30px; right:5%;">← Kapat</button>
         <div style="max-width: 800px; margin: 0 auto; text-align: center;">
             <h2 style="font-size: 2.5rem; margin-bottom: 20px;">👑 Absolute Yönetim</h2>
-            <div style="background:var(--card-bg); padding:20px; border-radius:20px; margin-bottom:20px;">
-                <input type="text" id="admin-ann-input" placeholder="Global Duyuru Yaz..." style="width:70%;">
+            
+            <div style="background:var(--card-bg); padding:20px; border-radius:20px; margin-bottom:20px; border: 2px solid var(--primary);">
+                <h3>Global Duyuru</h3>
+                <input type="text" id="admin-ann-input" placeholder="Duyuru Yaz..." style="width:70%;">
                 <button class="btn-main" id="post-ann">Duyur</button>
-                <button class="btn-outline" id="clear-ann" style="border-color:#ef4444; color:#ef4444;">Duyuruyu Kaldır</button>
             </div>
-            <h3 style="margin-bottom:15px;">Global Sohbet Yönetimi</h3>
+
+            <div style="background:var(--card-bg); padding:20px; border-radius:20px; margin-bottom:20px; border: 2px solid #fbbf24;">
+                <h3>🛡️ Admin Yönetimi</h3>
+                <input type="email" id="new-admin-email" placeholder="Admin E-postası..." style="width:70%;">
+                <button class="btn-main" id="add-admin-btn" style="background:#fbbf24;">Admin Ekle</button>
+                <div id="admins-list" style="margin-top:15px; text-align:left; color:#000;"></div>
+            </div>
+
+            <h3 style="margin-bottom:15px;">Global Sohbet Denetimi</h3>
             <div id="admin-chat-list"></div>
         </div>
     </div>
@@ -234,7 +243,7 @@
     <nav>
         <div class="logo">ABSOLUTE</div>
         <div class="nav-controls">
-            
+            <div class="online-counter" id="online-val">Online: ..</div>
             <button class="theme-toggle" id="theme-btn" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">🌙</button>
             <button class="btn-outline" id="admin-trigger" style="display:none; border-color:#fbbf24; color:#fbbf24;">👑 Yönetim</button>
             <button class="btn-outline" id="friends-trigger" style="display:none;">👥 Topluluk</button>
@@ -452,7 +461,8 @@
 
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
-            const adminEmail = "kuzeymurt00@gmail.com";
+            // ANA ADMİN (Değiştirme, her zaman yetkili kalsın)
+            const mainAdmin = "kuzeymurt00@gmail.com";
             
             if (user) {
                 const userDoc = await getDoc(doc(db, "all_users", user.uid));
@@ -463,9 +473,13 @@
                 document.getElementById('login-trigger').style.display = 'none';
                 document.getElementById('friends-trigger').style.display = 'inline-block';
                 
-                if(user.email === adminEmail) {
+                // Firestore'daki "admins" koleksiyonundan kontrol et
+                const adminDoc = await getDoc(doc(db, "admins", user.email));
+                
+                if(user.email === mainAdmin || adminDoc.exists()) {
                     document.getElementById('admin-trigger').style.display = 'inline-block';
                     loadAdminPanel();
+                    loadAdminsList(); // Adminleri listele
                 }
                 loadAllUsers();
             } else {
@@ -477,19 +491,36 @@
             }
         });
 
-        document.getElementById('post-ann').onclick = async () => {
-            const txt = document.getElementById('admin-ann-input').value;
-            if(!txt) return alert("Lütfen bir duyuru metni girin!");
-            await setDoc(doc(db, "settings", "announcement"), { text: txt });
-            alert("Duyuru yayına alındı!");
-            document.getElementById('admin-ann-input').value = "";
+        // Yeni Admin Ekleme
+        document.getElementById('add-admin-btn').onclick = async () => {
+            const email = document.getElementById('new-admin-email').value;
+            if(!email) return alert("Lütfen e-posta girin!");
+            await setDoc(doc(db, "admins", email), { email: email, addedAt: Date.now() });
+            alert(email + " artık bir admin!");
+            document.getElementById('new-admin-email').value = "";
         };
 
-        document.getElementById('clear-ann').onclick = async () => {
-            if(confirm("Duyuruyu tamamen kaldırmak istiyor musunuz?")) {
-                await setDoc(doc(db, "settings", "announcement"), { text: "" });
-                alert("Duyuru kaldırıldı.");
+        // Admin Listesini Göster
+        function loadAdminsList() {
+            const listDiv = document.getElementById('admins-list');
+            onSnapshot(collection(db, "admins"), (snap) => {
+                listDiv.innerHTML = "<strong>Mevcut Adminler:</strong><br>";
+                snap.forEach(d => {
+                    listDiv.innerHTML += `• ${d.id} <button onclick="window.removeAdmin('${d.id}')" style="background:red; color:white; border:none; border-radius:5px; cursor:pointer; font-size:0.7rem;">Sil</button><br>`;
+                });
+            });
+        }
+
+        window.removeAdmin = async (email) => {
+            if(confirm(email + " yetkisini almak istiyor musun?")) {
+                await deleteDoc(doc(db, "admins", email));
             }
+        };
+
+        document.getElementById('post-ann').onclick = async () => {
+            const txt = document.getElementById('admin-ann-input').value;
+            await setDoc(doc(db, "settings", "announcement"), { text: txt });
+            alert("Duyuru güncellendi!");
         };
 
         document.getElementById('admin-trigger').onclick = () => document.getElementById('admin-panel').style.display = 'block';
@@ -601,4 +632,3 @@
     </script>
 </body>
 </html>
-
