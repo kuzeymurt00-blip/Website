@@ -114,13 +114,50 @@
             transition: var(--transition);
         }
 
+  /* --- OYUN KÜTÜPHANESİ VE MİNİ OYUNLAR STİLLERİ --- */
         .games-section { padding: 60px 5%; max-width: 1200px; margin: 0 auto; }
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        
+        .game-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 30px; 
+        }
+
         .game-card { 
-            background: var(--card-bg); border-radius: 35px; padding: 30px; 
-            transition: var(--transition); border: 1px solid rgba(0,0,0,0.05);
-            display: flex; flex-direction: column; justify-content: space-between;
+            background: var(--card-bg); 
+            border-radius: 35px; 
+            padding: 30px; 
+            transition: var(--transition); 
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
             min-height: 250px;
+        }
+
+        /* Üzerine gelince büyüme efekti */
+        .game-card:hover { 
+            transform: translateY(-15px); 
+            border-color: var(--primary); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+        }
+
+        /* MİNİ OYUNLARA ÖZEL STİL (Kesikli Çizgi ve Hafif Renk) */
+        .mini-game-card {
+            border: 2px dashed var(--primary) !important;
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        body.dark-mode .mini-game-card {
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .mini-game-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-family: 'Manrope', sans-serif;
         }
         .game-card:hover { transform: translateY(-15px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         .game-status { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; padding: 4px 12px; border-radius: 50px; display: inline-block; margin-bottom: 15px; }
@@ -335,6 +372,30 @@
                 </div>
             </div>
         </div>
+    </section>
+    <section class="games-section">
+    <div class="game-grid">
+        </div>
+</section> <section class="games-section" style="padding-top: 0;">
+    <div class="mini-game-title">
+        <h2 style="font-size: 1.8rem; font-weight: 800;">🕹️ Mini Games</h2>
+    </div>
+
+    <div class="game-grid">
+        <div class="game-card mini-game-card">
+            <div>
+                <span class="game-status status-released">YENİ</span>
+                <h3 style="margin-top: 10px;">🎭 Emojilerle Hikaye</h3>
+                <p style="color: var(--text-sub); font-size: 0.9rem; margin-top: 10px;">
+                    Hayal gücünü kullan, emojilerle en efsane hikayeyi sen yaz!
+                </p>
+            </div>
+            <a href="https://kuzeymurt00-blip.github.io/Mini-Game/" target="_blank" class="btn-main" style="margin-top: 20px;">Hemen Oyna</a>
+        </div>
+    </div>
+</section>
+
+<section class="hub-section">
     </section>
 
     <div class="modal" id="login-modal">
