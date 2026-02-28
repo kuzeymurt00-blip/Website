@@ -278,18 +278,27 @@
         </div>
     </div>
 
-    <nav>
-        <div class="logo">ABSOLUTE</div>
-        <div class="nav-controls">
-            <div class="online-counter" id="online-val">Online: ..</div>
-            <button class="theme-toggle" id="theme-btn" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">🌙</button>
-            <button class="btn-outline" id="admin-trigger" style="display:none; border-color:#fbbf24; color:#fbbf24;">👑 Yönetim</button>
-            <button class="btn-outline" id="friends-trigger" style="display:none;">👥 Topluluk</button>
-            <span id="user-name" style="font-weight: 700; color: var(--primary); display: none;"></span>
-            <button class="btn-main" id="login-trigger">Giriş / Kayıt Ol</button>
-            <button class="btn-main" id="logout-btn" style="display:none; background:#ef4444;">Çıkış</button>
+<nav>
+    <div class="logo">ABSOLUTE</div>
+    <div class="nav-controls">
+        <div class="online-counter" id="online-val">Online: ..</div>
+        <button class="theme-toggle" id="theme-btn" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">🌙</button>
+        <button class="btn-outline" id="admin-trigger" style="display:none; border-color:#fbbf24; color:#fbbf24;">👑 Yönetim</button>
+        <button class="btn-outline" id="friends-trigger" style="display:none;">👥 Topluluk</button>
+
+        <div id="nav-stats" style="display: none; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border); margin-right: 5px;">
+            <span id="nav-lvl" style="font-weight: 800; color: #fbbf24; font-size: 0.75rem;">LVL 1</span>
+            <div style="width: 60px; height: 5px; background: #21262d; border-radius: 3px; overflow: hidden;">
+                <div id="nav-xp-fill" style="height: 100%; background: var(--primary); width: 0%; transition: 0.8s ease;"></div>
+            </div>
         </div>
-    </nav>
+
+        <span id="user-name" style="font-weight: 700; color: var(--primary); display: none; margin-right: 10px;"></span>
+        
+        <button class="btn-main" id="login-trigger">Giriş / Kayıt Ol</button>
+        <button class="btn-main" id="logout-btn" style="display:none; background:#ef4444;">Çıkış</button>
+    </div>
+</nav>
 
     <header class="hero animate">
         <div>
@@ -380,8 +389,7 @@
     <div class="mini-game-title">
         <h2 style="font-size: 1.8rem; font-weight: 800;">🕹️ Mini Games</h2>
     </div>
-
-    <div class="game-grid">
+<div class="game-grid">
         <div class="game-card mini-game-card">
             <div>
                 <span class="game-status status-released">YENİ</span>
@@ -391,6 +399,17 @@
                 </p>
             </div>
             <a href="https://kuzeymurt00-blip.github.io/Mini-Game/" target="_blank" class="btn-main" style="margin-top: 20px;">Hemen Oyna</a>
+        </div>
+
+        <div class="game-card mini-game-card" style="border-color: #d29922 !important; background: rgba(210, 153, 34, 0.03);">
+            <div>
+                <span class="game-status" style="background: #d29922; color: black; font-weight: bold;">Yeni</span>
+                <h3 style="margin-top: 10px;">🛡️ Görev Merkezi (XP)</h3>
+                <p style="color: var(--text-sub); font-size: 0.9rem; margin-top: 10px;">
+                    Verilen görevleri tamamla ve XP kazan! Büyük yarışmaya hazır mısın?
+                </p>
+            </div>
+            <a href="https://kuzeymurt00-blip.github.io/Mini-Game2/" class="btn-main" style="margin-top: 20px; background: #d29922; border-color: #d29922;">Hemen Oyna</a>
         </div>
     </div>
 </section>
@@ -425,11 +444,13 @@
         © 2026 Absolute Studios | Made by Kuziceo
     </footer>
 
-    <script type="module">
-        import { initializeApp } from "firebase/app";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, deleteDoc } from "firebase/firestore";
-        import { getDatabase, ref, onValue, set, onDisconnect } from "firebase/database";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getDatabase, ref, onValue, set, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // Firebase yapılandırman buraya gelecek (apiKey vb.)
 
         const firebaseConfig = {
             apiKey: "AIzaSyC29HXKSTcXx5-BuLrt6h8iH4BUh3jnNes",
@@ -522,37 +543,57 @@
 
         document.getElementById('logout-btn').onclick = () => signOut(auth);
 
-        onAuthStateChanged(auth, async (user) => {
-            currentUser = user;
-            // ANA ADMİN (Değiştirme, her zaman yetkili kalsın)
-            const mainAdmin = "kuzeymurt00@gmail.com";
-            
-            if (user) {
-                const userDoc = await getDoc(doc(db, "all_users", user.uid));
-                userData = userDoc.data();
-                document.getElementById('user-name').innerText = `${userData?.avatar || ''} ${userData?.username}`;
-                document.getElementById('user-name').style.display = 'block';
-                document.getElementById('logout-btn').style.display = 'block';
-                document.getElementById('login-trigger').style.display = 'none';
-                document.getElementById('friends-trigger').style.display = 'inline-block';
-                
-                // Firestore'daki "admins" koleksiyonundan kontrol et
-                const adminDoc = await getDoc(doc(db, "admins", user.email));
-                
-                if(user.email === mainAdmin || adminDoc.exists()) {
-                    document.getElementById('admin-trigger').style.display = 'inline-block';
-                    loadAdminPanel();
-                    loadAdminsList(); // Adminleri listele
-                }
-                loadAllUsers();
-            } else {
-                document.getElementById('user-name').style.display = 'none';
-                document.getElementById('logout-btn').style.display = 'none';
-                document.getElementById('login-trigger').style.display = 'block';
-                document.getElementById('friends-trigger').style.display = 'none';
-                document.getElementById('admin-trigger').style.display = 'none';
+    onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    const mainAdmin = "kuzeymurt00@gmail.com";
+    
+    // XP ve Nav Stats Elementleri
+    const statsArea = document.getElementById('nav-stats');
+    const navLvl = document.getElementById('nav-lvl');
+    const navXpFill = document.getElementById('nav-xp-fill');
+
+    if (user) {
+        // Mevcut kullanıcı adı ve buton işlemleri
+        const userDoc = await getDoc(doc(db, "all_users", user.uid));
+        userData = userDoc.data();
+        document.getElementById('user-name').innerText = `${userData?.avatar || ''} ${userData?.username}`;
+        document.getElementById('user-name').style.display = 'block';
+        document.getElementById('logout-btn').style.display = 'block';
+        document.getElementById('login-trigger').style.display = 'none';
+        document.getElementById('friends-trigger').style.display = 'inline-block';
+
+        // --- YENİ: XP VE LEVEL TAKİBİ ---
+        if (statsArea) statsArea.style.display = 'flex'; // Giriş yapıldıysa barı göster
+
+        onSnapshot(doc(db, "user_stats", user.uid), (snap) => {
+            if (snap.exists()) {
+                const data = snap.data();
+                if (navLvl) navLvl.innerText = "LVL " + (data.level || 1);
+                if (navXpFill) navXpFill.style.width = (data.xp || 0) + "%";
             }
         });
+        // --------------------------------
+
+        // Admin kontrolleri
+        const adminDoc = await getDoc(doc(db, "admins", user.email));
+        if(user.email === mainAdmin || adminDoc.exists()) {
+            document.getElementById('admin-trigger').style.display = 'inline-block';
+            loadAdminPanel();
+            loadAdminsList();
+        }
+        loadAllUsers();
+    } else {
+        // Çıkış yapıldıysa her şeyi gizle
+        document.getElementById('user-name').style.display = 'none';
+        document.getElementById('logout-btn').style.display = 'none';
+        document.getElementById('login-trigger').style.display = 'block';
+        document.getElementById('friends-trigger').style.display = 'none';
+        document.getElementById('admin-trigger').style.display = 'none';
+        
+        // XP Barını gizle
+        if (statsArea) statsArea.style.display = 'none';
+    }
+});
 
         // Yeni Admin Ekleme
         document.getElementById('add-admin-btn').onclick = async () => {
