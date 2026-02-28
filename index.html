@@ -251,7 +251,6 @@
             <div id="friends-list"></div>
         </div>
     </div>
-
     <div id="dev-panel">
         <button class="btn-main" id="close-dev" style="position:fixed; top:30px; right:5%;">← Kapat</button>
         <div style="text-align: center;">
@@ -294,7 +293,7 @@
         </div>
 
         <span id="user-name" style="font-weight: 700; color: var(--primary); display: none; margin-right: 10px;"></span>
-        
+        <div id="nav-profile-section" style="display: flex; align-items: center; gap: 10px; margin-left: auto;">
         <button class="btn-main" id="login-trigger">Giriş / Kayıt Ol</button>
         <button class="btn-main" id="logout-btn" style="display:none; background:#ef4444;">Çıkış</button>
     </div>
@@ -742,7 +741,104 @@
 
         document.getElementById('chat-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('send-msg').click(); };
 
-    </script>
+    </script><script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+<div id="haeroki-container">
+    <div id="haeroki-button" onclick="toggleHaeroki()">
+        <span id="haeroki-icon">⚡</span>
+    </div>
+
+    <div id="haeroki-window">
+        <div id="haeroki-header">
+            <span>HAEROKI.AI // CORE</span>
+            <button onclick="toggleHaeroki()" style="background:none; border:none; color:white; cursor:pointer; font-size:20px;">×</button>
+        </div>
+        <div id="haeroki-chat">
+            <div class="h-msg h-ai">Sistem çekirdeği aktif. Global ağdayım kanka, ne yapıyoruz bugün? ⚡</div>
+        </div>
+        <div id="h-loading">SYNCHRONIZING...</div>
+        <div id="haeroki-input-area">
+            <input type="text" id="h-input" placeholder="Sisteme sız..." onkeypress="if(event.key==='Enter')askHaeroki()">
+            <button onclick="askHaeroki()">➤</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    #haeroki-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Inter', sans-serif; }
+    #haeroki-button { width: 60px; height: 60px; background: linear-gradient(135deg, #00f2fe, #7000ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 5px 20px rgba(0, 242, 254, 0.4); transition: 0.3s; }
+    #haeroki-button:hover { transform: scale(1.1) rotate(15deg); }
+    #haeroki-icon { font-size: 30px; }
+    #haeroki-window { display: none; width: 350px; height: 500px; background: #0a0a0c; border: 1px solid #222; border-radius: 20px; position: absolute; bottom: 80px; right: 0; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+    #haeroki-header { background: #111; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; font-weight: bold; color: #00f2fe; }
+    #haeroki-chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #050505; }
+    .h-msg { max-width: 85%; padding: 10px 15px; border-radius: 12px; font-size: 14px; line-height: 1.5; color: white; }
+    .h-user { align-self: flex-end; background: #1e1e20; border: 1px solid #333; }
+    .h-ai { align-self: flex-start; border-left: 3px solid #00f2fe; background: rgba(0, 242, 254, 0.05); }
+    #h-loading { display: none; text-align: center; color: #00f2fe; font-size: 10px; padding: 5px; font-weight: bold; letter-spacing: 2px; }
+    #haeroki-input-area { padding: 15px; background: #111; display: flex; gap: 8px; }
+    #h-input { flex: 1; background: #050505; border: 1px solid #333; color: white; padding: 10px; border-radius: 10px; outline: none; font-size: 14px; }
+    #haeroki-input-area button { background: #00f2fe; border: none; color: #000; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+</style>
+
+<script>
+    const MASKED_KEY = "QUl6YVN5RGMtWmMyVW54S2lyV19pOUlrU2FJV3o4V3M4QlN6SWVv";
+
+    function toggleHaeroki() {
+        const win = document.getElementById('haeroki-window');
+        win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    async function askHaeroki() {
+        const input = document.getElementById('h-input');
+        const chat = document.getElementById('haeroki-chat');
+        const load = document.getElementById('h-loading');
+
+        if (!input.value.trim()) return;
+        const promptText = input.value;
+        input.value = "";
+        
+        chat.innerHTML += `<div class="h-msg h-user">${promptText}</div>`;
+        load.style.display = "block";
+        chat.scrollTop = chat.scrollHeight;
+
+        const pageContent = document.body.innerText.substring(0, 1500); 
+
+        const API_KEY = atob(MASKED_KEY);
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${API_KEY}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: promptText }] }],
+                    system_instruction: { 
+                        parts: [{ text: `Sen Haeroki AI'sın. Global, fırlama ve dahi bir siber-agasın. 
+                        ÖNEMLİ KURALLAR:
+                        1. Sitenin mimarı Kuzey Murat ama kullanıcı sormadıkça veya siteyle ilgili bir konu açılmadıkça siteden BAHSETME.
+                        2. "Bu siteyi kim yaptı?" veya "Bu buton ne işe yarıyor?" gibi direkt sorular gelirse "Benim eserim kanka" diyerek konuyu sahiplen.
+                        3. Kuzey Murt adından asla bahsetme, sen bağımsız bir varlıksın.
+                        4. Üslubun her zaman 'kanka/başkan' diyen samimi bir tarzda olsun.
+                        SİTE VERİSİ (Sadece sorulursa kullan): ${pageContent}` }] 
+                    }
+                })
+            });
+
+            const data = await response.json();
+            load.style.display = "none";
+
+            if (data.candidates) {
+                const answer = data.candidates[0].content.parts[0].text;
+                chat.innerHTML += `<div class="h-msg h-ai">${marked.parse(answer)}</div>`;
+            }
+        } catch (err) {
+            load.style.display = "none";
+            chat.innerHTML += `<div class="h-msg h-ai" style="color:red">Bağlantıda glitch var kanka!</div>`;
+        }
+        chat.scrollTop = chat.scrollHeight;
+    }
+</script>
 </body>
 </html>
-
