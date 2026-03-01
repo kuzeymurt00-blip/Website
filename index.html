@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -285,17 +286,26 @@
         <button class="btn-outline" id="admin-trigger" style="display:none; border-color:#fbbf24; color:#fbbf24;">👑 Yönetim</button>
         <button class="btn-outline" id="friends-trigger" style="display:none;">👥 Topluluk</button>
 
-        <div id="nav-stats" style="display: none; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border); margin-right: 5px;">
-            <span id="nav-lvl" style="font-weight: 800; color: #fbbf24; font-size: 0.75rem;">LVL 1</span>
-            <div style="width: 60px; height: 5px; background: #21262d; border-radius: 3px; overflow: hidden;">
-                <div id="nav-xp-fill" style="height: 100%; background: var(--primary); width: 0%; transition: 0.8s ease;"></div>
+        <div id="nav-stats" style="display: none; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border); margin-right: 5px;">
+            <div style="display: flex; align-items: center; gap: 8px; border-right: 1px solid #333; padding-right: 10px;">
+                <span id="nav-lvl" style="font-weight: 800; color: #fbbf24; font-size: 0.75rem;">LVL 1</span>
+                <div style="width: 60px; height: 5px; background: #21262d; border-radius: 3px; overflow: hidden;">
+                    <div id="nav-xp-fill" style="height: 100%; background: var(--primary); width: 0%; transition: 0.8s ease;"></div>
+                </div>
+            </div>
+
+            <div id="nav-kzy-section" style="display: flex; align-items: center; gap: 5px;">
+                <span style="color: #00ccff; font-weight: 800; font-size: 0.85rem;" id="nav-assets">0</span>
+                <span style="color: #00ccff; font-size: 0.65rem; font-weight: bold; opacity: 0.8;">KZY</span>
             </div>
         </div>
 
         <span id="user-name" style="font-weight: 700; color: var(--primary); display: none; margin-right: 10px;"></span>
+        
         <div id="nav-profile-section" style="display: flex; align-items: center; gap: 10px; margin-left: auto;">
-        <button class="btn-main" id="login-trigger">Giriş / Kayıt Ol</button>
-        <button class="btn-main" id="logout-btn" style="display:none; background:#ef4444;">Çıkış</button>
+            <button class="btn-main" id="login-trigger">Giriş / Kayıt Ol</button>
+            <button class="btn-main" id="logout-btn" style="display:none; background:#ef4444;">Çıkış</button>
+        </div>
     </div>
 </nav>
 
@@ -381,14 +391,11 @@
             </div>
         </div>
     </section>
-    <section class="games-section">
-    <div class="game-grid">
-        </div>
-</section> <section class="games-section" style="padding-top: 0;">
+<section class="games-section" style="padding-top: 0;">
     <div class="mini-game-title">
         <h2 style="font-size: 1.8rem; font-weight: 800;">🕹️ Mini Games</h2>
     </div>
-<div class="game-grid">
+    <div class="game-grid">
         <div class="game-card mini-game-card">
             <div>
                 <span class="game-status status-released">YENİ</span>
@@ -409,7 +416,9 @@
                 </p>
             </div>
             <a href="https://kuzeymurt00-blip.github.io/Mini-Game2/" class="btn-main" style="margin-top: 20px; background: #d29922; border-color: #d29922;">Hemen Oyna</a>
-        </div><div class="game-card mini-game-card" style="border-color: #6366f1 !important; background: rgba(99, 102, 241, 0.03);">
+        </div>
+
+        <div class="game-card mini-game-card" style="border-color: #6366f1 !important; background: rgba(99, 102, 241, 0.03);">
             <div>
                 <span class="game-status" style="background: #6366f1; color: white; font-weight: bold;">YENİ</span>
                 <h3 style="margin-top: 10px;">⚡ Absolute Clicker</h3>
@@ -420,6 +429,25 @@
             <a href="https://kuzeymurt00-blip.github.io/MiniGame3/" class="btn-main" style="margin-top: 20px; background: #6366f1; border-color: #6366f1;">Hemen Oyna</a>
         </div>
     </div>
+</section>
+
+<section class="games-section" style="padding-top: 20px;">
+    <div class="mini-game-title">
+        <h2 style="font-size: 1.8rem; font-weight: 800; color: #10b981;">💹 Ekonomi & Yönetim</h2>
+    </div>
+    <div class="game-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        <div class="game-card mini-game-card" style="border-color: #10b981 !important; background: rgba(16, 185, 129, 0.05); border-width: 2px;">
+            <div>
+                <span class="game-status" style="background: #10b981; color: white; font-weight: bold;">BORSA</span>
+                <h3 style="margin-top: 10px;">💹 Absolute Borsa</h3>
+                <p style="color: var(--text-sub); font-size: 0.9rem; margin-top: 10px;">
+                    KZY varlıklarını yönet, piyasaya hükmet ve 150 varlığa ulaşarak Admin yetkisini kap!
+                </p>
+            </div>
+            <a href="https://kuzeymurt00-blip.github.io/MiniBorsa/" class="btn-main" style="margin-top: 20px; background: #10b981; border-color: #10b981;">Borsaya Giriş Yap</a>
+        </div>
+        
+        </div>
 </section>
 
 <section class="hub-section">
@@ -579,7 +607,41 @@
                 if (navLvl) navLvl.innerText = "LVL " + (data.level || 1);
                 if (navXpFill) navXpFill.style.width = (data.xp || 0) + "%";
             }
-        });
+        });// --- XP, LEVEL VE KZY VARLIK TAKİBİ ---
+if (statsArea) statsArea.style.display = 'flex'; 
+
+// 1. Mevcut XP/Level takibi (user_stats koleksiyonu)
+onSnapshot(doc(db, "user_stats", user.uid), (snap) => {
+    if (snap.exists()) {
+        const data = snap.data();
+        if (navLvl) navLvl.innerText = "LVL " + (data.level || 1);
+        if (navXpFill) navXpFill.style.width = (data.xp || 0) + "%";
+    }
+});
+
+// 2. YENİ: KZY Varlık takibi (clicker_stats koleksiyonu)
+onSnapshot(doc(db, "clicker_stats", user.uid), (snap) => {
+    const navAssets = document.getElementById('nav-assets'); // HTML'e eklediğin ID
+    if (snap.exists()) {
+        const data = snap.data();
+        const assetCount = data.assets || 0;
+        
+        if (navAssets) {
+            navAssets.innerText = assetCount.toLocaleString(); // Sayıyı buraya yazdır
+            
+            // 150 VARLIK KONTROLÜ (ADMIN RENGİ)
+            if (assetCount >= 150) {
+                navAssets.style.color = "#fbbf24"; // Altın sarısı
+                // Eğer istersen burada admin butonunu da açabilirsin
+            } else {
+                navAssets.style.color = "#00ccff"; // Normal turkuaz
+            }
+        }
+    } else {
+        if (navAssets) navAssets.innerText = "0";
+    }
+});
+// --------------------------------------
         // --------------------------------
 
         // Admin kontrolleri
@@ -818,7 +880,7 @@
                         parts: [{ text: `Sen Haeroki AI'sın. Global, fırlama ve dahi bir siber-agasın. 
                         ÖNEMLİ KURALLAR:
                         1. Sitenin mimarı Kuzey Murat ama kullanıcı sormadıkça veya siteyle ilgili bir konu açılmadıkça siteden BAHSETME.
-                        2. "Bu siteyi kim yaptı?" veya "Bu buton ne işe yarıyor?" gibi direkt sorular gelirse "Benim eserim kanka" diyerek konuyu sahiplen.
+                        2. "Bu siteyi kim yaptı?" veya "Bu buton ne işe yarıyor?" gibi direkt sorular gelirse "Kuzey Murat Tarafından" diyerek konuyu sahiplen.
                         3. Kuzey Murt adından asla bahsetme, sen bağımsız bir varlıksın.
                         4. Üslubun her zaman 'kanka/başkan' diyen samimi bir tarzda olsun.
                         SİTE VERİSİ (Sadece sorulursa kullan): ${pageContent}` }] 
