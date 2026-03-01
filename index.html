@@ -198,7 +198,16 @@
             margin-bottom: 25px; cursor: pointer; display: flex; justify-content: space-between;
             align-items: center; font-weight: 800; transition: 0.3s;
         }
-
+/* Admin Özel Stili */
+.admin-name {
+    color: #fbbf24 !important; /* Sapsarı */
+    font-weight: bold;
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.4); /* Hafif parlama */
+}
+.crown-icon {
+    margin-right: 5px;
+    filter: drop-shadow(0 0 2px #fbbf24);
+}
         .admin-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; color: #000; border-left: 5px solid #ef4444; }
         .del-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         
@@ -477,7 +486,7 @@
     </div>
 
     <footer style="text-align: center; padding: 30px; background: #000; color: white; opacity: 0.5;">
-        © 2026 Absolute Studios | Made by Kuziceo
+        © 2026 Absolute Studios | Made by Kuzimen
     </footer>
 
 <script type="module">
@@ -734,72 +743,118 @@ onSnapshot(doc(db, "clicker_stats", user.uid), (snap) => {
         document.getElementById('friends-trigger').onclick = () => document.getElementById('friends-panel').style.display = 'block';
         document.getElementById('close-friends').onclick = () => document.getElementById('friends-panel').style.display = 'none';
 
-        function loadAllUsers() {
-            const list = document.getElementById('friends-list');
-            onSnapshot(collection(db, "all_users"), (snap) => {
-                list.innerHTML = "";
-                snap.forEach(d => {
-                    const u = d.data();
-                    if(u.username === userData?.username) return;
-                    const div = document.createElement('div');
-                    div.style = "padding:15px; background:white; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; color:#000; border:1px solid #eee;";
-                    div.innerHTML = `<span>${u.avatar || '👤'} ${u.username}</span> <button class="btn-main" style="padding:5px 15px; font-size:0.8rem;">Fısılda</button>`;
-                    div.onclick = () => { openChat(u.username); document.getElementById('friends-panel').style.display = 'none'; };
-                    list.appendChild(div);
-                });
-            });
-        }
+async function loadAllUsers() {
+    const list = document.getElementById('friends-list');
+    // Canlı dinleyiciyi başlatıyoruz
+    onSnapshot(collection(db, "all_users"), async (snap) => {
+        list.innerHTML = "";
+        
+        // await kullanabilmek için for...of döngüsü daha sağlıklıdır kanka
+        for (const d of snap.docs) {
+            const u = d.data();
+            if (u.username === userData?.username) continue;
 
-        document.getElementById('global-trigger').onclick = () => {
-            openChat("GLOBAL");
-            document.getElementById('friends-panel').style.display = 'none';
-        };
+            // --- ADMIN KONTROLÜ ---
+            const adminDoc = await getDoc(doc(db, "admins", u.email));
+            const isAdmin = adminDoc.exists() || u.email === "kuzeymurt00@gmail.com";
 
-        function openChat(name) {
-            activeChat = name;
-            document.getElementById('chat-window').style.display = 'flex';
-            document.getElementById('chat-with-name').innerText = name === "GLOBAL" ? "🌍 Global Grup" : name;
-            const msgDiv = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.style = `padding:15px; background:${isAdmin ? 'rgba(251, 191, 36, 0.05)' : 'white'}; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; color:#000; border:${isAdmin ? '2px solid #fbbf24' : '1px solid #eee'}; transition: 0.3s;`;
             
-            if(chatUnsubscribe) chatUnsubscribe();
-            const colName = name === "GLOBAL" ? "global_chat" : "chats";
-            const q = query(collection(db, colName), orderBy("time", "asc"));
+            const crown = isAdmin ? '👑 ' : '';
+            const nameStyle = isAdmin ? 'style="color: #d29922; font-weight: 800;"' : 'style="color: #000;"';
+
+            div.innerHTML = `<span>${u.avatar || '👤'} ${crown}<span ${nameStyle}>${u.username}</span></span> 
+                             <button class="btn-main" style="padding:5px 15px; font-size:0.8rem; ${isAdmin ? 'background:#fbbf24; border:none; color:black;' : ''}">Fısılda</button>`;
             
-            chatUnsubscribe = onSnapshot(q, (snap) => {
-                msgDiv.innerHTML = "";
-                snap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    const me = userData?.username;
-                    let show = false;
-                    if(name === "GLOBAL") show = true;
-                    else if((data.from === me && data.to === name) || (data.from === name && data.to === me)) show = true;
-
-                    if(show) {
-                        const m = document.createElement('div');
-                        m.className = `message ${data.from === me ? 'msg-me' : 'msg-them'} ${name === "GLOBAL" ? 'msg-global' : ''}`;
-                        const time = data.time ? new Date(data.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
-                        m.innerHTML = `<strong>${data.from}:</strong><br>${data.text} <span class="msg-time">${time}</span>`;
-                        msgDiv.appendChild(m);
-                    }
-                });
-                msgDiv.scrollTop = msgDiv.scrollHeight;
-            });
+            div.onclick = () => { 
+                openChat(u.username); 
+                document.getElementById('friends-panel').style.display = 'none'; 
+            };
+            list.appendChild(div);
         }
+    });
+}
 
-        document.getElementById('send-msg').onclick = async () => {
-            const input = document.getElementById('chat-input');
+// --- GLOBAL TETİKLEYİCİSİ (Çalışmayan kısım burasıydı kanka) ---
+const globalBtn = document.getElementById('global-trigger');
+if (globalBtn) {
+    globalBtn.onclick = () => {
+        openChat("GLOBAL");
+        document.getElementById('friends-panel').style.display = 'none';
+    };
+}
+
+async function openChat(name) {
+    activeChat = name;
+    document.getElementById('chat-window').style.display = 'flex';
+    document.getElementById('chat-with-name').innerText = name === "GLOBAL" ? "🌍 Global Grup" : name;
+    const msgDiv = document.getElementById('chat-messages');
+    
+    if (chatUnsubscribe) chatUnsubscribe();
+
+    const colName = name === "GLOBAL" ? "global_chat" : "chats";
+    const q = query(collection(db, colName), orderBy("time", "asc"));
+    
+    chatUnsubscribe = onSnapshot(q, (snap) => {
+        msgDiv.innerHTML = "";
+        snap.forEach(docSnap => {
+            const data = docSnap.data();
             const me = userData?.username;
-            if(!input.value || !activeChat || !me) return;
-            const temizlenmisMesaj = kufurFiltrele(input.value);
-            const colName = activeChat === "GLOBAL" ? "global_chat" : "chats";
-            await addDoc(collection(db, colName), { 
-                from: me, 
-                to: activeChat, 
-                text: temizlenmisMesaj, 
-                time: Date.now() 
-            });
-            input.value = "";
-        };
+            let show = false;
+
+            if (name === "GLOBAL") show = true;
+            else if ((data.from === me && data.to === name) || (data.from === name && data.to === me)) show = true;
+
+            if (show) {
+                const m = document.createElement('div');
+                m.className = `message ${data.from === me ? 'msg-me' : 'msg-them'} ${name === "GLOBAL" ? 'msg-global' : ''}`;
+                
+                const isAdminMsg = data.role === "admin"; 
+                const crown = isAdminMsg ? '👑 ' : '';
+                const adminStyle = isAdminMsg ? 'style="color: #fbbf24; text-shadow: 0 0 5px rgba(251,191,36,0.5); font-weight: 800;"' : '';
+
+                const time = data.time ? new Date(data.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
+                
+                m.innerHTML = `<strong ${adminStyle}>${crown}${data.from}:</strong><br>${data.text} <span class="msg-time">${time}</span>`;
+                msgDiv.appendChild(m);
+            }
+        });
+        msgDiv.scrollTop = msgDiv.scrollHeight;
+    }, (error) => {
+        console.error("Chat hatası kanka:", error);
+    });
+}
+
+document.getElementById('send-msg').onclick = async () => {
+    const input = document.getElementById('chat-input');
+    const me = userData?.username;
+    if (!input.value || !activeChat || !me) return;
+
+    let isMeAdmin = false;
+    try {
+        // Auth kontrolünü sağlama alıyoruz
+        if(auth.currentUser) {
+            const adminDoc = await getDoc(doc(db, "admins", auth.currentUser.email));
+            isMeAdmin = adminDoc.exists() || auth.currentUser.email === "kuzeymurt00@gmail.com";
+        }
+    } catch (e) {
+        console.log("Admin kontrol hatası:", e);
+    }
+    
+    const temizlenmisMesaj = kufurFiltrele(input.value);
+    const colName = activeChat === "GLOBAL" ? "global_chat" : "chats";
+    
+    await addDoc(collection(db, colName), { 
+        from: me, 
+        to: activeChat, 
+        text: temizlenmisMesaj, 
+        role: isMeAdmin ? "admin" : "user", 
+        time: Date.now() 
+    });
+    
+    input.value = "";
+};
 
         document.getElementById('chat-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('send-msg').click(); };
 
