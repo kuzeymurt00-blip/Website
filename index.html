@@ -13,20 +13,31 @@
         /* Senin eski CSS kodların burada olabilir, onları elleme. 
            En alta in ve verdiğim @media kodlarını yapıştır. */
 
-        @media only screen and (max-width: 600px) {
-            body { font-size: 14px; padding: 5px; }
-            #friends-panel, #chat-window { 
-                width: 100% !important; 
-                height: 100% !important; 
-                top: 0 !important; 
-                left: 0 !important; 
-                border-radius: 0 !important; 
-            }
-            #chat-input { width: 65% !important; }
-            #send-msg { width: 30% !important; }
-            /* Adminlerin ismi mobilde de sapsarı kalsın */
-            .admin-name { font-size: 1.1rem; } 
-        }
+       /* --- NAVBAR MOBİL DÜZELTME --- */
+@media only screen and (max-width: 600px) {
+    /* Navbar'ın ana kutusunu bul (ID'si genelde 'navbar' veya 'nav'dır) */
+    .navbar, #navbar, nav {
+        flex-direction: column !important; /* Butonları alt alta diz */
+        height: auto !important;
+        padding: 10px !important;
+        gap: 8px !important; /* Butonların arasına boşluk koy */
+    }
+
+    /* Bakiye, KZY ve Varlık kutuları yan yana çok yer kaplıyorsa */
+    .nav-item, #nav-bakiye, #nav-kzy, #nav-varlik {
+        width: 100% !important; /* Mobilde her biri tam satır kaplasın */
+        text-align: center !important;
+        font-size: 0.85rem !important; /* Yazıları biraz daha kibarlaştır */
+        margin: 2px 0 !important;
+    }
+
+    /* Eğer butonların çok büyükse onları da ufaltalım */
+    .btn-main {
+        width: 100% !important; /* Butonlar telefonun genişliğine yayılsın */
+        padding: 12px !important;
+        font-size: 0.9rem !important;
+    }
+}
     </style>
     <script type="importmap">
       {
