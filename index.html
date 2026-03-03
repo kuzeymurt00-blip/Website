@@ -397,7 +397,30 @@
                 <a href="https://kuzeymurt00-blip.github.io/With-Collab/" class="btn-main" style="background: var(--accent);">Bizimle çalışmak ister misin?</a>
             </div>
         </div>
-        <div style="background: linear-gradient(135deg, var(--primary), var(--accent)); height: 300px; border-radius: 40px; display: grid; place-items: center; font-size: 5rem; animation: float 6s ease-in-out infinite;">🎮</div>
+        <div style="background: linear-gradient(135deg, var(--primary), var(--accent)); height: 300px; border-radius: 40px; display: grid; place-items: center; font-size: 5rem; animation: float 6s ease-in-out infinite;">🎮</div><button class="btn-main" onclick="document.getElementById('extra-page-panel').style.display='block'" 
+        style="
+            background: linear-gradient(135deg, #3498db, #8e44ad); 
+            color: white; 
+            border: none; 
+            padding: 12px 25px; 
+            border-radius: 15px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.2); 
+            transition: 0.3s transform ease;">
+    <span style="font-size: 1.2rem;">💻</span> 
+    <span>Hiroki OS İndirme Kısmı</span>
+</button>
+
+<style>
+    /* Butona ufak bir hover efekti: Üstüne gelince hafifçe büyür */
+    .btn-main:hover {
+        transform: translateY(-3px) scale(1.02);
+    }
+</style>
     </header>
 
     <section class="stats-bar animate">
@@ -405,7 +428,191 @@
         <div class="stat-item"><span class="stat-number">40</span><span class="stat-label">Abone</span></div>
         <div class="stat-item"><span class="stat-number">GameHub</span><span class="stat-label">Launcher</span></div>
     </section>
+<div id="extra-page-panel" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg, #0d0d0d); z-index: 10000; overflow-y: auto; display: none; padding: 50px 20px; font-family: 'Manrope', sans-serif;">
+    
+    <button class="btn-main" onclick="document.getElementById('extra-page-panel').style.display='none'" 
+            style="position: fixed; top: 25px; right: 25px; z-index: 10001; background: #ff4757; border: none; padding: 12px 25px; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; transition: 0.3s;">
+        ← Masaüstüne Dön
+    </button>
 
+    <div style="max-width: 900px; margin: 0 auto;">
+        
+        <div style="text-align: center; margin-bottom: 60px;">
+            <h1 style="font-size: 4rem; font-weight: 800; color: var(--text-color); margin-bottom: 10px; letter-spacing: -3px; background: linear-gradient(90deg, #3498db, #8e44ad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hiroki OS</h1>
+            <p style="font-size: 1.1rem; color: #3498db; font-weight: 600; text-transform: uppercase; letter-spacing: 3px;">Hafifliğin ve Gücün Yeni Tanımı</p>
+        </div>
+<div style="margin-top: 50px; background: rgba(255, 255, 255, 0.02); padding: 40px; border-radius: 35px; border: 1px dashed rgba(255, 255, 255, 0.1); text-align: center;">
+    <h2 style="color: var(--text-color); margin-bottom: 30px; font-size: 2rem;">Çalıştırmak İçin Ne Lazım?</h2>
+    
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+        
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; min-width: 200px;">
+            <p style="color: #3498db; font-weight: bold; margin-bottom: 5px;">Bellek (RAM)</p>
+            <p style="color: var(--text-color); font-size: 0.9rem;">256MB (Varsa iyi olur, yoksa canı sağolsun)</p>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; min-width: 200px;">
+            <p style="color: #2ecc71; font-weight: bold; margin-bottom: 5px;">İşlemci</p>
+            <p style="color: var(--text-color); font-size: 0.9rem;">Hesap makinesinden hallice herhangi bir şey</p>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; min-width: 200px;">
+            <p style="color: #ff4757; font-weight: bold; margin-bottom: 5px;">Depolama</p>
+            <p style="color: var(--text-color); font-size: 0.9rem;">7.1 GB (7 GB'ı geçsin yeter bence, 100 MB'ı sistem)</p>
+        </div>
+
+    </div>
+
+    <p style="margin-top: 25px; color: var(--text-color); opacity: 0.5; font-style: italic; font-size: 0.85rem;">
+        *Not: Bilgisayarınızın fanı çalışıyorsa, Hiroki OS için yeterince güçlüdür demektir.
+    </p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px;">
+    
+    <div style="background: rgba(52, 152, 219, 0.05); padding: 35px; border-radius: 30px; border: 1px solid #3498db; text-align: left;">
+        <div style="font-size: 2.5rem; margin-bottom: 20px;">🛡️</div>
+        <h3 style="color: var(--text-color); font-size: 1.5rem; margin-bottom: 15px;">Debian Kararlılığı</h3>
+        <p style="color: var(--text-color); opacity: 0.8; line-height: 1.6;">Debian tabanlı Hiroki OS ile donma ve çökme tarih oluyor. Kaynamayan, donmayan, patlamayan akıcı bir deneyimi ve dünyanın en sert çekirdeğine sahip linux tabanlı koruma sistemlerini size sunuyoruz</p>
+    </div>
+
+    <div style="background: rgba(255,255,255,0.03); padding: 35px; border-radius: 30px; border: 1px solid #ff4757; text-align: left;">
+        <div style="font-size: 2.5rem; margin-bottom: 20px;">📦</div>
+        <h3 style="color: var(--text-color); font-size: 1.5rem; margin-bottom: 15px;">7 GB'lık Gizem</h3>
+        <p style="color: var(--text-color); opacity: 0.6; line-height: 1.6;">ISO dosyamız 7 GB ama içinde ne olduğu hakkında en ufak bir fikrimiz yok. Belki de sadece internet paketine karşı açılmış bir savaştır bu?</p>
+    </div>
+
+    <div style="background: rgba(46, 204, 113, 0.05); padding: 35px; border-radius: 30px; border: 1px solid #2ecc71; text-align: left;">
+        <div style="font-size: 2.5rem; margin-bottom: 20px;">⚡</div>
+        <h3 style="color: var(--text-color); font-size: 1.5rem; margin-bottom: 15px;">Sıfır Bloatware</h3>
+        <p style="color: var(--text-color); opacity: 0.8; line-height: 1.6;">Eski sistemleri yoran Microsoft servislerini çöpe attık. Hiroki OS,Microsofttan bile boş yazlımların olduğu bir işletim sistemi</p>
+    </div>
+
+    <div style="background: rgba(255,255,255,0.03); padding: 35px; border-radius: 30px; border: 1px solid #f1c40f; text-align: left;">
+        <div style="font-size: 2.5rem; margin-bottom: 20px;">🕹️</div>
+        <h3 style="color: var(--text-color); font-size: 1.5rem; margin-bottom: 15px;">Eğlence Paketi</h3>
+        <p style="color: var(--text-color); opacity: 0.6; line-height: 1.6;">Sistemin içine hiçbir işe yaramayan, sadece işlemciyi ısıtıp fan sesiyle senfoni yapan harika programlar kurduk. Canın sıkılınca takıl!</p>
+    </div>
+
+    <div style="background: rgba(155, 89, 182, 0.05); padding: 35px; border-radius: 30px; border: 1px solid #8e44ad; text-align: left;">
+        <div style="font-size: 2.5rem; margin-bottom: 20px;">🔒</div>
+        <h3 style="color: var(--text-color); font-size: 1.5rem; margin-bottom: 15px;">Açık Kaynak Ruhu</h3>
+        <p style="color: var(--text-color); opacity: 0.8; line-height: 1.6;">Verilerin Bill Gates'e değil, sana ait. Hiroki OS'un çekirdeği tamamen şeffaftır; arka kapı yok, gizli takip yok,Her ay seni anahtar alman için mıncıklayan kodlar yok.</p>
+    </div>
+
+    <div style="background: rgba(255,255,255,0.03); padding: 35px; border-radius: 30px; border: 1px solid #3498db; text-align: left;">
+        <div style="font-size: 2.5rem; margin-bottom: 20px;">🤡</div>
+        <h3 style="color: var(--text-color); font-size: 1.5rem; margin-bottom: 15px;">Sonsuz Döngü Yok</h3>
+        <p style="color: var(--text-color); opacity: 0.6; line-height: 1.6;">Windows gibi 'Güncelleniyor %99'da takılıp kalmaz. Çünkü bizde güncelleme yok! Hatalarımızla barışığız, sistemimizi böyle sevin.</p>
+    </div>
+
+</div>
+<div style="margin-top: 40px; background: rgba(255, 255, 255, 0.02); padding: 30px; border-radius: 25px; border: 1px solid rgba(52, 152, 219, 0.3);">
+    <h3 style="color: #3498db; margin-bottom: 20px;">Teknik Spesifikasyonlar</h3>
+    <table style="width: 100%; color: var(--text-color); border-collapse: collapse;">
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <td style="padding: 15px; font-weight: bold;">Çekirdek (Kernel)</td>
+            <td style="padding: 15px; opacity: 0.8;">Debian Stable Base (LTS)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <td style="padding: 15px; font-weight: bold;">Paket Yönetimi</td>
+            <td style="padding: 15px; opacity: 0.8;">APT / DPKG</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <td style="padding: 15px; font-weight: bold;">Güvenlik Mimarisi</td>
+            <td style="padding: 20px; opacity: 5;"><b>ClamAV™</b></td>
+        </tr>
+        <tr>
+            <td style="padding: 15px; font-weight: bold;">Dosya Sistemi</td>
+            <td style="padding: 15px; opacity: 0.8;">Ext4 / Btrfs Support</td>
+        </tr>
+    </table>
+</div><div style="margin-top: 30px; padding: 35px; background: rgba(46, 204, 113, 0.05); border-radius: 35px; border: 2px solid #2ecc71; display: flex; align-items: center; gap: 25px;">
+    
+    <div style="font-size: 3.5rem;">🛡️</div>
+    
+    <div style="text-align: left;">
+        <h3 style="color: #2ecc71; font-size: 1.6rem; margin-bottom: 10px;">Entegre ClamAV™ Koruması</h3>
+        <p style="color: var(--text-color); opacity: 0.9; line-height: 1.6; margin: 0;">
+            Hiroki OS, dünyanın en güvenilir açık kaynaklı antivirüs motoru olan <b>ClamAV</b> ile tam entegre gelir. 
+            Sistem dosyalarınız ve verileriniz, zararlı yazılımlara, Truva atlarına ve virüslere karşı gerçek zamanlı olarak korunur. 
+            Güvenliğiniz bizim için bir şaka değil, Debian tabanımızın sarsılmaz bir parçasıdır.
+        </p>
+    </div>
+
+</div>
+        <div style="margin-top: 60px; background: linear-gradient(135deg, #1e1e1e, #111); padding: 50px; border-radius: 40px; border: 1px solid rgba(52, 152, 219, 0.3); text-align: center;">
+            <h2 style="color: white; margin-bottom: 10px;">Hiroki OS'u Denemeye Hazır mısın?</h2>
+            <p style="color: #3498db; font-size: 0.9rem; margin-bottom: 30px; font-weight: bold;">Versiyon: v1.0.0 (Pre-Alpha Phase)</p>
+            
+            <button onclick="showDownloadWarning()" style="background: #3498db; color: white; border: none; padding: 18px 45px; border-radius: 20px; font-size: 1.2rem; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);">
+                📥 Şimdi İndir (.iso)
+            </button>
+            
+            <p style="margin-top: 20px; color: #ff4757; font-size: 0.9rem; font-weight: 600;">*Henüz genel indirmeye sunulmamıştır.</p>
+        </div>
+<div style="margin-top: 40px; padding: 30px; background: rgba(0,0,0,0.4); border: 2px solid #2ecc71; border-radius: 40px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;">
+        
+        <div style="flex: 1; min-width: 250px; text-align: center; border-right: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🛡️</div>
+            <h3 style="color: #2ecc71; margin-bottom: 5px;">%100 Anti-Patlama</h3>
+            <p style="color: var(--text-color); opacity: 0.6; font-size: 0.85rem;">Laboratuvar ortamında (evdeki mutfak masası) yapılan testlerde hiçbir bilgisayarın alev almadığı kanıtlanmıştır.</p>
+        </div>
+
+        <div style="flex: 2; min-width: 300px;">
+            <h4 style="color: var(--text-color); margin-bottom: 15px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;">Gelecekte Bizi Ne Bekliyor?</h4>
+            <div style="display: flex; gap: 10px; flex-direction: column;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: #3498db; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem;">Q2 2026</span>
+                    <span style="color: var(--text-color); font-size: 0.9rem;">ISO dosyasını 30 GB yapıp rekor kırmak.</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: #2ecc71; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem;">Q3 2026</span>
+                    <span style="color: var(--text-color); font-size: 0.9rem;">Bill Gates'e Hiroki OS yüklü bir laptop hediye etmek.</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: #f1c40f; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem;">Q4 2026</span>
+                    <span style="color: var(--text-color); font-size: 0.9rem;">Boş programların yanına 'gerçekten' çalışan bir şey eklemeyi düşünmek.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div><div style="margin-top: 40px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+    
+    <div style="flex: 1; min-width: 280px; background: rgba(255, 255, 255, 0.03); border: 1px solid #3498db; padding: 25px; border-radius: 30px; position: relative; overflow: hidden;">
+        <div style="font-size: 2rem; margin-bottom: 10px;">💾</div>
+        <h4 style="color: #3498db; margin-bottom: 10px;">Antika Sevenler</h4>
+        <p style="color: var(--text-color); opacity: 0.7; font-size: 0.85rem;">Bilgisayarınız 20 yıllık mı? RAM'i üfleyince mi çalışıyor? Hiroki OS onu emekli etmez, hayata döndürür.</p>
+    </div>
+
+    <div style="flex: 1; min-width: 280px; background: rgba(255, 255, 255, 0.03); border: 1px solid #f1c40f; padding: 25px; border-radius: 30px;">
+        <div style="font-size: 2rem; margin-bottom: 10px;">🤡</div>
+        <h4 style="color: #f1c40f; margin-bottom: 10px;">Ciddiyet Düşmanları</h4>
+        <p style="color: var(--text-color); opacity: 0.7; font-size: 0.85rem;">Sıkıcı iş toplantılarından ve mavi ekranlardan bıkanlar için %100 onaylı eğlence ve boş beleş yazılım garantisi.</p>
+    </div>
+
+    <div style="flex: 1; min-width: 280px; background: rgba(255, 255, 255, 0.03); border: 1px solid #ff4757; padding: 25px; border-radius: 30px;">
+        <div style="font-size: 2rem; margin-bottom: 10px;">📉</div>
+        <h4 style="color: #ff4757; margin-bottom: 10px;">Sınırsız İnterneti Olanlar</h4>
+        <p style="color: var(--text-color); opacity: 0.7; font-size: 0.85rem;">'7 GB indirdim ama içinde hiçbir şey yokmuş' diyerek adrenalin yaşamak isteyen cesur yüreklere özel.</p>
+    </div>
+
+</div>
+
+<div style="margin-top: 60px; text-align: center; opacity: 0.4; font-size: 0.8rem; letter-spacing: 2px;">
+    BY KUZEY - 2026 | DÜNYANIN EN AĞIR AMA EN HAFİF SİSTEMİ
+</div>
+
+</div>
+</div>
+
+<script>
+    // İndirme Uyarısı Fonksiyonu
+    function showDownloadWarning() {
+        alert("Kanka Hiroki OS şu an mutfakta pişiyor! 🔥\nPre-Alpha aşamasında olduğumuz için indirme linkleri yakında burada olacak. Auranı beklemede tut!");
+    }
+</script>
     <section class="achievements-section animate">
         <h2 style="text-align: center; font-family: 'Manrope'; font-size: 2.2rem;">Absolute Başarımları</h2>
         <div class="ach-grid">
