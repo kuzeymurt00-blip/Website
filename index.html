@@ -764,7 +764,98 @@
     <footer style="text-align: center; padding: 30px; background: #000; color: white; opacity: 0.5;">
         © 2026 Absolute Studios | Made by Kuzimen
     </footer>
+<div id="abs-gamepad-menu">
+    <div id="abs-main-btn">
+        <span class="gamepad-icon">🎮</span>
+    </div>
+    <div class="abs-options">
+        <button class="abs-opt" onclick="location.href='#games'" title="Oyunları Keşfet">🕹️</button>
+        <button class="abs-opt" onclick="unlockAchievement('Gizli Kumanda')" title="Başarım Kazan">🏆</button>
+        <button class="abs-opt" onclick="window.open('https://youtube.com/@QLoLwTR1')" title="YouTube">📺</button>
+    
+    </div>
+</div>
 
+<style>
+/* KUMANDA TASARIMI */
+#abs-gamepad-menu {
+    position: fixed;
+    right: 30px;
+    bottom: 100px; /* Monitör widget'ının üstünde dursun */
+    z-index: 1000001;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 15px;
+}
+
+#abs-main-btn {
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, #4A148C, #009DFF);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 157, 255, 0.5);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#abs-main-btn:hover { transform: rotate(15deg) scale(1.1); }
+
+.gamepad-icon { font-size: 30px; }
+
+.abs-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    pointer-events: none;
+}
+
+#abs-gamepad-menu:hover .abs-options {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.abs-opt {
+    width: 45px; height: 45px;
+    background: #fff;
+    border: 2px solid #4A148C;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.abs-opt:hover {
+    background: #4A148C;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* KARANLIK MOD İÇİN KÜÇÜK AYAR */
+.dark-mode-active {
+    background-color: #ff0202 !important;
+    color: white !important;
+}
+</style>
+
+<script>
+// Karanlık Mod Geçişi
+document.getElementById('theme-toggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode-active');
+    const isDark = document.body.classList.contains('dark-mode-active');
+    document.getElementById('theme-toggle').innerText = isDark ? "☀️" : "🌗";
+});
+</script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -1232,6 +1323,386 @@ document.getElementById('send-msg').onclick = async () => {
         }
         chat.scrollTop = chat.scrollHeight;
     }
+</script><canvas id="abs-pixel-dust" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1000000;"></canvas>
+
+<script>
+(function() {
+    const canvas = document.getElementById('abs-pixel-dust');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const colors = ['#4A148C', '#009DFF', '#7B1FA2']; // Sitenin mor ve mavi tonları
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class DustParticle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            // Boyutu biraz küçülttük (2-5 piksel arası)
+            this.size = Math.random() * 3 + 2; 
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            // Hızı YAVAŞLATTIK (Hemen kaçmasınlar)
+            this.speedX = Math.random() * 0.8 - 0.4; 
+            this.speedY = Math.random() * 0.8 - 0.4; 
+            // Kaybolma hızını YAVAŞLATTIK (Ekrandan daha geç silinsinler)
+            this.opacity = 1;
+            this.fadeSpeed = 0.008; 
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.opacity -= this.fadeSpeed;
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.opacity;
+            ctx.fillRect(this.x, this.y, this.size, this.size);
+        }
+    }
+
+    window.addEventListener('mousemove', (e) => {
+        // Her mouse hareketinde sadece 1 YENİ piksel ekle (Sayıyı azalttık)
+        particles.push(new DustParticle(e.clientX, e.clientY));
+    });
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            if (particles[i].opacity <= 0) {
+                particles.splice(i, 1);
+                i--;
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+})();
+</script><div id="abs-monitor">
+    <div class="monitor-header">
+        <span class="pulse"></span> ABSOLUTE_SYSTEM_LIVE
+    </div>
+    <div class="monitor-body">
+        <div class="stat-line">PROJE: <span id="project-name">HIROKI-OS</span> <span class="percent" id="project-pcnt">85%</span></div>
+        <div class="stat-line">SUNUCU: <span style="color: #27c93f;">AKTİF</span></div>
+        <div class="stat-line">ENERJİ: <span id="energy-val">100%</span></div>
+        <div class="stat-line">MOD: <span id="dev-mode">GELİŞTİRİYOR... 💻</span></div>
+    </div>
+</div>
+
+<style>
+/* ABSOLUTE MONITOR TASARIMI */
+#abs-monitor {
+    position: fixed;
+    bottom: 20px;
+    left: 20px; /* Piksel tozuna engel olmasın diye sola koyduk */
+    width: 220px;
+    background: rgba(10, 10, 15, 0.85);
+    border: 1px solid #4A148C; /* Sitedeki mor tonu */
+    border-radius: 10px;
+    padding: 12px;
+    font-family: 'Courier New', monospace;
+    color: #fff;
+    z-index: 999998;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    pointer-events: none; /* Mouse tıklamasını engellemez */
+}
+
+.monitor-header {
+    font-size: 10px;
+    color: #009DFF; /* Sitedeki mavi tonu */
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pulse {
+    width: 6px;
+    height: 6px;
+    background: #27c93f;
+    border-radius: 50%;
+    animation: pulse-anim 1.5s infinite;
+}
+
+@keyframes pulse-anim {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.stat-line {
+    font-size: 12px;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.percent { color: #ffbd2e; font-weight: bold; }
+
+/* Sitenin renklerine uygun hafif bir parlama */
+#abs-monitor::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    box-shadow: inset 0 0 10px rgba(74, 20, 140, 0.3);
+    border-radius: 10px;
+}
+</style>
+
+<script>
+// Verileri rastgele oynatıp "Canlı" hissi verelim
+setInterval(() => {
+    // Enerji %98 ile %100 arası oynasın
+    const energy = 98 + Math.floor(Math.random() * 3);
+    document.getElementById('energy-val').innerText = energy + "%";
+    
+    // Proje yüzdesi çok yavaş artsın
+    let pcnt = parseInt(document.getElementById('project-pcnt').innerText);
+    if(pcnt < 99 && Math.random() > 0.95) {
+        document.getElementById('project-pcnt').innerText = (pcnt + 1) + "%";
+    }
+}, 3000);
+</script><div id="abs-bubble-container">
+    <div id="abs-bubble">
+        <span id="abs-bubble-text">Sisteme bağlanıldı...</span>
+    </div>
+    <div class="abs-bubble-pointer"></div>
+</div>
+
+<style>
+/* AKILLI BALONCUK TASARIMI */
+#abs-bubble-container {
+    position: fixed;
+    top: 85px; /* Sağ üstteki profil kısmının altına denk gelsin */
+    right: 30px;
+    z-index: 999997;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: none;
+    font-family: 'Manrope', sans-serif;
+}
+
+#abs-bubble {
+    background: #fff;
+    color: #4A148C; /* Sitedeki mor tonu */
+    padding: 10px 18px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(74, 20, 140, 0.15);
+    border: 2px solid #009DFF; /* Sitedeki mavi tonu */
+    font-weight: 600;
+    font-size: 13px;
+    max-width: 200px;
+    animation: bubble-float 3s ease-in-out infinite;
+}
+
+.abs-bubble-pointer {
+    width: 0; height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #009DFF;
+    margin-right: 25px;
+    margin-top: -45px; /* Balonun üstünde dursun */
+    transform: rotate(180deg);
+    position: absolute;
+    top: -10px;
+}
+
+@keyframes bubble-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+</style>
+
+<script>
+const messages = [
+    "Bugün Absolute günü! 🚀",
+    "Piksel piksel inşa ediyoruz... 🛠️",
+    "Hiroki-OS yakında hazır! 💻",
+    "Yeni oyunları gördün mü? 🎮",
+    "Absolute Studios'a hoş geldin! ✨",
+    "Level atlamak için keşfetmeye devam et! 🏆"
+];
+
+const bubbleText = document.getElementById('abs-bubble-text');
+
+function updateBubble() {
+    // Rastgele bir mesaj seç
+    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+    
+    // Yavaşça değiştirme efekti
+    bubbleText.style.opacity = 0;
+    setTimeout(() => {
+        bubbleText.innerText = randomMsg;
+        bubbleText.style.opacity = 1;
+    }, 500);
+}
+
+// Her 10 saniyede bir mesaj değişsin
+setInterval(updateBubble, 10000);
+
+// İlk açılışta günaydın/iyi akşamlar mesajı
+const hour = new Date().getHours();
+if (hour < 12) bubbleText.innerText = "Günaydın Absolute üyesi! ☀️";
+else if (hour < 18) bubbleText.innerText = "İyi günler geliştirici! ☁️";
+else bubbleText.innerText = "İyi akşamlar! 🌙";
+</script><div id="abs-preloader">
+    <div class="preloader-content">
+        <div class="pixel-spinner"></div>
+        <h1 class="preloader-text">ABSOLUTE<span>STUDIOS</span></h1>
+        <div class="loading-bar-container">
+            <div id="abs-loading-progress"></div>
+        </div>
+        <p id="loading-status">Sistem dosyaları yükleniyor...</p>
+    </div>
+</div>
+
+<style>
+/* AÇILIŞ EKRANI TASARIMI */
+#abs-preloader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #050505;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000000; /* Her şeyin üstünde */
+    transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+.preloader-content { text-align: center; color: white; font-family: 'Manrope', sans-serif; }
+
+.preloader-text {
+    font-size: 2.5rem;
+    letter-spacing: 5px;
+    margin-bottom: 20px;
+}
+
+.preloader-text span { color: #009DFF; } /* Sitedeki mavi tonu */
+
+/* PİKSEL SPINNER EFECT */
+.pixel-spinner {
+    width: 50px; height: 50px;
+    border: 4px solid #4A148C; /* Sitedeki mor tonu */
+    border-top: 4px solid #009DFF;
+    border-radius: 10px; /* Piksel havası için az yuvarlak */
+    margin: 0 auto 30px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* YÜKLEME ÇUBUĞU */
+.loading-bar-container {
+    width: 250px; height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 auto 10px;
+}
+
+#abs-loading-progress {
+    width: 0%; height: 100%;
+    background: linear-gradient(90deg, #4A148C, #009DFF);
+    transition: width 0.4s ease;
+}
+
+#loading-status { font-size: 12px; color: #555; font-family: monospace; }
+
+/* Yükleme bitince ekranı gizle */
+#abs-preloader.loaded { opacity: 0; visibility: hidden; }
+</style>
+
+<script>
+window.addEventListener('load', () => {
+    const progress = document.getElementById('abs-loading-progress');
+    const status = document.getElementById('loading-status');
+    const preloader = document.getElementById('abs-preloader');
+    
+    // Simüle edilmiş yükleme adımları
+    const steps = [
+        { p: 30, t: "Pikseller birleştiriliyor..." },
+        { p: 60, t: "Absolute çekirdek yükleniyor..." },
+        { p: 90, t: "Arayüz optimize ediliyor..." },
+        { p: 100, t: "Erişim sağlandı!" }
+    ];
+
+    let currentStep = 0;
+    const interval = setInterval(() => {
+        if (currentStep < steps.length) {
+            progress.style.width = steps[currentStep].p + "%";
+            status.innerText = steps[currentStep].t;
+            currentStep++;
+        } else {
+            clearInterval(interval);
+            setTimeout(() => {
+                preloader.classList.add('loaded');
+            }, 500);
+        }
+    }, 600);
+});
+</script><canvas id="matrix-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999998; display: none; pointer-events: none; opacity: 0.3;"></canvas>
+
+<script>
+const mCanvas = document.getElementById('matrix-canvas');
+const mCtx = mCanvas.getContext('2d');
+
+let matrixActive = false;
+
+function setupMatrix() {
+    mCanvas.width = window.innerWidth;
+    mCanvas.height = window.innerHeight;
+}
+
+const characters = "01ABSOLUTE23456789KUZEY";
+const fontSize = 16;
+let columns = 0;
+let drops = [];
+
+function initDrops() {
+    columns = mCanvas.width / fontSize;
+    drops = [];
+    for (let i = 0; i < columns; i++) drops[i] = 1;
+}
+
+function drawMatrix() {
+    mCtx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
+
+    mCtx.fillStyle = "#00d4ff"; // Absolute Mavisi
+    mCtx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        mCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > mCanvas.width && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+        drops[i]++;
+    }
+}
+
+
+
+setInterval(() => {
+    if (matrixActive) drawMatrix();
+}, 33);
+
+window.addEventListener('resize', setupMatrix);
 </script>
 </body>
 </html>
