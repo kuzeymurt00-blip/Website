@@ -1702,7 +1702,23 @@ setInterval(() => {
     if (matrixActive) drawMatrix();
 }, 33);
 
-window.addEventListener('resize', setupMatrix);
+window.addEventListener('resize', setupMatrix);window.onload = function() {
+    const lEmail = localStorage.getItem('launcher_email');
+    const lPass = localStorage.getItem('launcher_password');
+
+    if (lEmail && lPass) {
+        // Sitedeki kutuların ID'lerini bulup içine yazdırıyoruz
+        // Bu ID'ler senin sitendeki kutuların gerçek ID'leri olmalı!
+        let eKutusu = document.getElementById('user_email'); 
+        let sKutusu = document.getElementById('user_password');
+
+        if (eKutusu) eKutusu.value = lEmail;
+        if (sKutusu) sKutusu.value = lPass;
+
+        console.log("Launcher verileri başarıyla dolduruldu.");
+    }
+};
 </script>
 </body>
 </html>
+
