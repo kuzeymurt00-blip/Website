@@ -1702,23 +1702,40 @@ setInterval(() => {
     if (matrixActive) drawMatrix();
 }, 33);
 
-window.addEventListener('resize', setupMatrix);window.onload = function() {
+window.addEventListener('resize', setupMatrix);
+</script><script>
+window.onload = function() {
+    // 1. Launcher'dan gelen verileri oku
     const lEmail = localStorage.getItem('launcher_email');
     const lPass = localStorage.getItem('launcher_password');
 
     if (lEmail && lPass) {
-        // Sitedeki kutuların ID'lerini bulup içine yazdırıyoruz
-        // Bu ID'ler senin sitendeki kutuların gerçek ID'leri olmalı!
-        let eKutusu = document.getElementById('user_email'); 
-        let sKutusu = document.getElementById('user_password');
+        // 2. Senin verdiğin ID'lere göre elementleri yakala
+        const emailInput = document.getElementById('email');
+        const passInput = document.getElementById('password');
+        const authBtn = document.getElementById('auth-btn');
+        const loginModal = document.getElementById('login-modal');
 
-        if (eKutusu) eKutusu.value = lEmail;
-        if (sKutusu) sKutusu.value = lPass;
+        if (emailInput && passInput) {
+            // Verileri kutulara doldur
+            emailInput.value = lEmail;
+            passInput.value = lPass;
 
-        console.log("Launcher verileri başarıyla dolduruldu.");
+            console.log("Launcher verileri kutulara dolduruldu.");
+
+            // 3. (Opsiyonel) Otomatik Giriş Yap
+            // Eğer istersen modalı otomatik açıp butona basabiliriz:
+            if (loginModal) loginModal.classList.add('active'); // Modalı görünür yap (CSS sınıfına göre)
+            
+            if (authBtn) {
+                setTimeout(() => {
+                    authBtn.click(); // 1 saniye sonra otomatik giriş yap
+                    console.log("Otomatik giriş tetiklendi!");
+                }, 1000);
+            }
+        }
     }
 };
 </script>
 </body>
 </html>
-
