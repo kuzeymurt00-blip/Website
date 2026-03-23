@@ -319,13 +319,71 @@
 
     <div id="friends-panel">
         <button class="btn-main" id="close-friends" style="position:fixed; top:30px; right:5%;">← Kapat</button>
-        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+        <div style="max-width: 700px; margin: 0 auto; text-align: center;">
             <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Absolute Topluluğu</h2>
-            <div class="global-badge" id="global-trigger">
-                <span>🌍 GLOBAL GRUP SOHBETİ</span>
-                <span style="background:white; color:var(--accent); padding:2px 10px; border-radius:10px; font-size:0.8rem;">HERKES BURADA</span>
+
+            <!-- SEKMELER -->
+            <div style="display:flex; gap:10px; justify-content:center; margin-bottom:25px;">
+                <button id="tab-users-btn" onclick="switchCommunityTab('users')" style="padding:10px 25px; border-radius:12px; border:2px solid var(--primary); background:var(--primary); color:white; font-weight:700; cursor:pointer; transition:0.3s;">👥 Üyeler</button>
+                <button id="tab-groups-btn" onclick="switchCommunityTab('groups')" style="padding:10px 25px; border-radius:12px; border:2px solid var(--primary); background:transparent; color:var(--primary); font-weight:700; cursor:pointer; transition:0.3s;">🏠 Gruplar</button>
             </div>
-            <div id="friends-list"></div>
+
+            <!-- ÜYELER SEKMESİ -->
+            <div id="community-tab-users">
+                <div class="global-badge" id="global-trigger">
+                    <span>🌍 GLOBAL GRUP SOHBETİ</span>
+                    <span style="background:white; color:var(--accent); padding:2px 10px; border-radius:10px; font-size:0.8rem;">HERKES BURADA</span>
+                </div>
+                <div id="friends-list"></div>
+            </div>
+
+            <!-- GRUPLAR SEKMESİ -->
+            <div id="community-tab-groups" style="display:none;">
+                <!-- Grup Oluştur -->
+                <div style="background:var(--card-bg); padding:20px; border-radius:20px; margin-bottom:20px; border:2px dashed var(--primary); text-align:left;">
+                    <h3 style="margin-bottom:15px; color:var(--primary);">➕ Yeni Grup Kur</h3>
+                    <input type="text" id="grp-name-input" placeholder="Grup adı..." style="width:100%; margin-bottom:10px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.1); background:var(--card-bg); color:var(--text-main);">
+                    <input type="text" id="grp-desc-input" placeholder="Grup açıklaması..." style="width:100%; margin-bottom:10px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.1); background:var(--card-bg); color:var(--text-main);">
+                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:12px;">
+                        <label style="font-weight:600; font-size:0.9rem;">Gizlilik:</label>
+                        <select id="grp-privacy-select" style="padding:8px 14px; border-radius:10px; border:1px solid rgba(0,0,0,0.1); background:var(--card-bg); color:var(--text-main); font-weight:600; cursor:pointer;">
+                            <option value="public">🌍 Herkese Açık</option>
+                            <option value="private">🔒 Gizli (Davet ile)</option>
+                        </select>
+                    </div>
+                    <button id="create-grp-btn" style="width:100%; padding:12px; border-radius:12px; border:none; background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; font-weight:800; cursor:pointer; font-size:1rem; transition:0.3s;">🚀 Grubu Kur</button>
+                </div>
+                <!-- Gruplar Listesi -->
+                <div id="groups-list" style="display:flex; flex-direction:column; gap:12px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRUP SOHBET PENCERESI (köşede animasyonlu) -->
+    <div id="group-chat-window" style="
+        position:fixed; bottom:20px; left:20px; width:330px; height:420px;
+        background:var(--card-bg); border-radius:22px;
+        box-shadow:0 15px 50px rgba(0,0,0,0.3);
+        display:none; flex-direction:column; z-index:3001;
+        border:2px solid var(--accent);
+        transform:translateY(30px) scale(0.95); opacity:0;
+        transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.4s ease;
+    ">
+        <div style="padding:14px 18px; background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; border-radius:20px 20px 0 0; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <div id="grp-chat-name" style="font-weight:800; font-size:1rem;">Grup</div>
+                <div id="grp-chat-members" style="font-size:0.7rem; opacity:0.85;">0 üye</div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <label id="grp-photo-label" title="Fotoğraf gönder" style="cursor:pointer; font-size:1.2rem; background:rgba(255,255,255,0.2); border-radius:8px; padding:4px 8px;">📷</label>
+                <input type="file" id="grp-photo-input" accept="image/*" style="display:none;">
+                <button onclick="closeGroupChat()" style="background:rgba(255,255,255,0.2); border:none; color:white; cursor:pointer; font-size:1rem; border-radius:8px; padding:4px 10px; transition:0.2s;">✕</button>
+            </div>
+        </div>
+        <div id="grp-chat-messages" style="flex:1; padding:12px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; background:rgba(0,0,0,0.01);"></div>
+        <div style="padding:10px; display:flex; gap:6px; border-top:1px solid rgba(0,0,0,0.07);">
+            <input type="text" id="grp-chat-input" placeholder="Gruba yaz..." style="flex:1; padding:10px 14px; border-radius:12px; border:1.5px solid rgba(0,0,0,0.08); background:var(--card-bg); color:var(--text-main); outline:none; font-size:0.9rem;">
+            <button id="grp-send-btn" style="background:var(--primary); border:none; color:white; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:800; font-size:1rem; transition:0.2s;">➤</button>
         </div>
     </div>
     <div id="dev-panel">
@@ -1353,6 +1411,252 @@ document.getElementById('send-msg').onclick = async () => {
 
         document.getElementById('chat-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('send-msg').click(); };
 
+    // =============================================
+    // TOPLULUK SEKMELERİ
+    // =============================================
+    window.switchCommunityTab = function(tab) {
+        const usersTab = document.getElementById('community-tab-users');
+        const groupsTab = document.getElementById('community-tab-groups');
+        const usersBtn = document.getElementById('tab-users-btn');
+        const groupsBtn = document.getElementById('tab-groups-btn');
+        if (tab === 'users') {
+            usersTab.style.display = 'block';
+            groupsTab.style.display = 'none';
+            usersBtn.style.background = 'var(--primary)';
+            usersBtn.style.color = 'white';
+            groupsBtn.style.background = 'transparent';
+            groupsBtn.style.color = 'var(--primary)';
+        } else {
+            usersTab.style.display = 'none';
+            groupsTab.style.display = 'block';
+            groupsBtn.style.background = 'var(--primary)';
+            groupsBtn.style.color = 'white';
+            usersBtn.style.background = 'transparent';
+            usersBtn.style.color = 'var(--primary)';
+            loadGroups();
+        }
+    };
+
+    // =============================================
+    // GRUP SİSTEMİ
+    // =============================================
+    let activeGroupId = null;
+    let activeGroupName = null;
+    let groupChatUnsub = null;
+    const IMGBB_KEY = "31821f4e615353f1b9b8b00b4683f221";
+
+    // Grup oluştur
+    document.getElementById('create-grp-btn').onclick = async () => {
+        if (!currentUser) return alert("Önce giriş yapmak zorundasın kanka!");
+        const name = document.getElementById('grp-name-input').value.trim();
+        const desc = document.getElementById('grp-desc-input').value.trim();
+        const privacy = document.getElementById('grp-privacy-select').value;
+        if (!name) return alert("Grup adı boş bırakılamaz!");
+
+        const grpRef = await addDoc(collection(db, "groups"), {
+            name: name,
+            desc: desc || "",
+            privacy: privacy,
+            owner: userData?.username,
+            ownerUid: currentUser.uid,
+            members: [currentUser.uid],
+            memberNames: [userData?.username],
+            createdAt: Date.now()
+        });
+        document.getElementById('grp-name-input').value = '';
+        document.getElementById('grp-desc-input').value = '';
+        alert(`"${name}" grubu kuruldu kanka! 🚀`);
+        switchCommunityTab('groups');
+    };
+
+    // Grupları listele
+    async function loadGroups() {
+        const listDiv = document.getElementById('groups-list');
+        listDiv.innerHTML = '<p style="color:var(--text-sub); text-align:center;">Gruplar yükleniyor...</p>';
+
+        onSnapshot(collection(db, "groups"), (snap) => {
+            listDiv.innerHTML = "";
+            if (snap.empty) {
+                listDiv.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:20px;">Henüz grup yok. İlk grubu sen kur! 🚀</p>';
+                return;
+            }
+            snap.forEach(docSnap => {
+                const g = docSnap.data();
+                const gid = docSnap.id;
+                const isMember = currentUser && g.members?.includes(currentUser.uid);
+                const isOwner = currentUser && g.ownerUid === currentUser.uid;
+                const isPrivate = g.privacy === 'private';
+
+                // Gizli gruplarda üye değilsen gösterme
+                if (isPrivate && !isMember) return;
+
+                const div = document.createElement('div');
+                div.style = `background:var(--card-bg); border-radius:18px; padding:18px; border:1.5px solid ${isPrivate ? 'rgba(168,85,247,0.4)' : 'rgba(99,102,241,0.2)'}; text-align:left; transition:0.3s;`;
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+                        <div>
+                            <div style="font-weight:800; font-size:1.05rem; color:var(--text-main);">${isPrivate ? '🔒' : '🌍'} ${g.name}</div>
+                            <div style="font-size:0.8rem; color:var(--text-sub); margin-top:3px;">${g.desc || 'Açıklama yok'}</div>
+                            <div style="font-size:0.75rem; color:var(--text-sub); margin-top:5px;">👤 ${g.owner} · ${g.members?.length || 1} üye</div>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            ${isMember
+                                ? `<button onclick="window.openGroupChat('${gid}','${g.name.replace(/'/g,"\\'")}',${g.members?.length||1})" style="padding:8px 16px; border-radius:10px; border:none; background:var(--primary); color:white; font-weight:700; cursor:pointer; font-size:0.85rem;">💬 Gir</button>`
+                                : `<button onclick="window.joinGroup('${gid}')" style="padding:8px 16px; border-radius:10px; border:none; background:#22c55e; color:white; font-weight:700; cursor:pointer; font-size:0.85rem;">➕ Katıl</button>`
+                            }
+                            ${isOwner ? `<button onclick="window.deleteGroup('${gid}')" style="padding:8px 12px; border-radius:10px; border:none; background:#ef4444; color:white; font-weight:700; cursor:pointer; font-size:0.8rem;">🗑</button>` : ''}
+                            ${isMember && !isOwner ? `<button onclick="window.leaveGroup('${gid}')" style="padding:8px 12px; border-radius:10px; border:none; background:#64748b; color:white; font-weight:700; cursor:pointer; font-size:0.8rem;">↩ Çık</button>` : ''}
+                        </div>
+                    </div>
+                `;
+                listDiv.appendChild(div);
+            });
+        });
+    }
+
+    // Gruba katıl
+    window.joinGroup = async function(gid) {
+        if (!currentUser) return alert("Önce giriş yap kanka!");
+        const grpRef = doc(db, "groups", gid);
+        const grpSnap = await getDoc(grpRef);
+        const data = grpSnap.data();
+        if (data.members?.includes(currentUser.uid)) return alert("Zaten bu grubun üyesisin!");
+        await updateDoc(grpRef, {
+            members: [...(data.members || []), currentUser.uid],
+            memberNames: [...(data.memberNames || []), userData?.username]
+        });
+        alert("Gruba katıldın! 🎉");
+    };
+
+    // Gruptan ayrıl
+    window.leaveGroup = async function(gid) {
+        if (!confirm("Gruptan ayrılmak istediğine emin misin?")) return;
+        const grpRef = doc(db, "groups", gid);
+        const grpSnap = await getDoc(grpRef);
+        const data = grpSnap.data();
+        await updateDoc(grpRef, {
+            members: (data.members || []).filter(id => id !== currentUser.uid),
+            memberNames: (data.memberNames || []).filter(n => n !== userData?.username)
+        });
+    };
+
+    // Grubu sil
+    window.deleteGroup = async function(gid) {
+        if (!confirm("Grubu silmek istediğine emin misin? Bu işlem geri alınamaz!")) return;
+        await deleteDoc(doc(db, "groups", gid));
+        closeGroupChat();
+    };
+
+    // Grup chat penceresini aç
+    window.openGroupChat = function(gid, gname, memberCount) {
+        activeGroupId = gid;
+        activeGroupName = gname;
+        document.getElementById('grp-chat-name').innerText = '🏠 ' + gname;
+        document.getElementById('grp-chat-members').innerText = memberCount + ' üye';
+        document.getElementById('friends-panel').style.display = 'none';
+
+        const win = document.getElementById('group-chat-window');
+        win.style.display = 'flex';
+        // Animasyon
+        requestAnimationFrame(() => {
+            win.style.transform = 'translateY(0) scale(1)';
+            win.style.opacity = '1';
+        });
+
+        // Mesajları dinle
+        if (groupChatUnsub) groupChatUnsub();
+        const msgDiv = document.getElementById('grp-chat-messages');
+        const q = query(collection(db, "groups", gid, "messages"), orderBy("time", "asc"));
+        groupChatUnsub = onSnapshot(q, (snap) => {
+            msgDiv.innerHTML = "";
+            snap.forEach(d => {
+                const data = d.data();
+                const isMe = data.senderName === userData?.username;
+                const m = document.createElement('div');
+
+                if (data.type === 'image') {
+                    m.style = `align-self:${isMe ? 'flex-end' : 'flex-start'}; max-width:85%;`;
+                    m.innerHTML = `
+                        <div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:3px; text-align:${isMe ? 'right' : 'left'};">${data.senderName}</div>
+                        <img src="${data.imageUrl}" alt="foto" style="max-width:100%; border-radius:12px; border:2px solid var(--accent); display:block; cursor:pointer;" onclick="window.open('${data.imageUrl}','_blank')">
+                        <div style="font-size:0.65rem; color:var(--text-sub); text-align:right; margin-top:2px;">${new Date(data.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
+                    `;
+                } else {
+                    m.className = `message ${isMe ? 'msg-me' : 'msg-them'}`;
+                    m.innerHTML = `<strong style="font-size:0.75rem; opacity:0.8;">${data.senderName}</strong><br>${data.text} <span class="msg-time">${new Date(data.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>`;
+                }
+                msgDiv.appendChild(m);
+            });
+            msgDiv.scrollTop = msgDiv.scrollHeight;
+        });
+    };
+
+    window.closeGroupChat = function() {
+        const win = document.getElementById('group-chat-window');
+        win.style.transform = 'translateY(30px) scale(0.95)';
+        win.style.opacity = '0';
+        setTimeout(() => { win.style.display = 'none'; }, 400);
+        if (groupChatUnsub) groupChatUnsub();
+        activeGroupId = null;
+    };
+
+    // Gruba mesaj gönder
+    document.getElementById('grp-send-btn').onclick = async () => {
+        if (!currentUser || !activeGroupId) return;
+        const input = document.getElementById('grp-chat-input');
+        const text = kufurFiltrele(input.value.trim());
+        if (!text) return;
+        await addDoc(collection(db, "groups", activeGroupId, "messages"), {
+            text: text,
+            senderName: userData?.username,
+            senderUid: currentUser.uid,
+            type: 'text',
+            time: Date.now()
+        });
+        input.value = "";
+    };
+    document.getElementById('grp-chat-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('grp-send-btn').click(); };
+
+    // IMGBB ile fotoğraf yükle
+    document.getElementById('grp-photo-label').onclick = () => document.getElementById('grp-photo-input').click();
+    document.getElementById('grp-photo-input').onchange = async function() {
+        if (!currentUser || !activeGroupId) return alert("Bir gruba giriş yapmadan fotoğraf atılamaz!");
+        const file = this.files[0];
+        if (!file) return;
+        if (file.size > 10 * 1024 * 1024) return alert("Fotoğraf 10MB'dan büyük olamaz kanka!");
+
+        const label = document.getElementById('grp-photo-label');
+        label.innerText = '⏳';
+
+        const formData = new FormData();
+        formData.append('image', file);
+        try {
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+            if (result.success) {
+                const imageUrl = result.data.url;
+                await addDoc(collection(db, "groups", activeGroupId, "messages"), {
+                    imageUrl: imageUrl,
+                    senderName: userData?.username,
+                    senderUid: currentUser.uid,
+                    type: 'image',
+                    time: Date.now()
+                });
+                label.innerText = '📷';
+            } else {
+                alert("Fotoğraf yüklenemedi kanka! imgbb hatası.");
+                label.innerText = '📷';
+            }
+        } catch (e) {
+            alert("Fotoğraf yüklenirken hata: " + e.message);
+            label.innerText = '📷';
+        }
+        this.value = "";
+    };
+
     </script><script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
@@ -1453,162 +1757,6 @@ document.getElementById('send-msg').onclick = async () => {
     }
 </script><canvas id="abs-pixel-dust" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1000000;"></canvas>
 
-<script>
-(function() {
-    const canvas = document.getElementById('abs-pixel-dust');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const colors = ['#4A148C', '#009DFF', '#7B1FA2']; // Sitenin mor ve mavi tonları
-
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    class DustParticle {
-        constructor(x, y) {
-            this.x = x;
-            this.y = y;
-            // Boyutu biraz küçülttük (2-5 piksel arası)
-            this.size = Math.random() * 3 + 2; 
-            this.color = colors[Math.floor(Math.random() * colors.length)];
-            // Hızı YAVAŞLATTIK (Hemen kaçmasınlar)
-            this.speedX = Math.random() * 0.8 - 0.4; 
-            this.speedY = Math.random() * 0.8 - 0.4; 
-            // Kaybolma hızını YAVAŞLATTIK (Ekrandan daha geç silinsinler)
-            this.opacity = 1;
-            this.fadeSpeed = 0.008; 
-        }
-
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            this.opacity -= this.fadeSpeed;
-        }
-
-        draw() {
-            ctx.fillStyle = this.color;
-            ctx.globalAlpha = this.opacity;
-            ctx.fillRect(this.x, this.y, this.size, this.size);
-        }
-    }
-
-    window.addEventListener('mousemove', (e) => {
-        // Her mouse hareketinde sadece 1 YENİ piksel ekle (Sayıyı azalttık)
-        particles.push(new DustParticle(e.clientX, e.clientY));
-    });
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw();
-            if (particles[i].opacity <= 0) {
-                particles.splice(i, 1);
-                i--;
-            }
-        }
-        requestAnimationFrame(animate);
-    }
-
-    animate();
-})();
-</script><div id="abs-monitor">
-    <div class="monitor-header">
-        <span class="pulse"></span> ABSOLUTE_SYSTEM_LIVE
-    </div>
-    <div class="monitor-body">
-        <div class="stat-line">PROJE: <span id="project-name">HIROKI-OS</span> <span class="percent" id="project-pcnt">85%</span></div>
-        <div class="stat-line">SUNUCU: <span style="color: #27c93f;">AKTİF</span></div>
-        <div class="stat-line">ENERJİ: <span id="energy-val">100%</span></div>
-        <div class="stat-line">MOD: <span id="dev-mode">GELİŞTİRİYOR... 💻</span></div>
-    </div>
-</div>
-
-<style>
-/* ABSOLUTE MONITOR TASARIMI */
-#abs-monitor {
-    position: fixed;
-    bottom: 20px;
-    left: 20px; /* Piksel tozuna engel olmasın diye sola koyduk */
-    width: 220px;
-    background: rgba(10, 10, 15, 0.85);
-    border: 1px solid #4A148C; /* Sitedeki mor tonu */
-    border-radius: 10px;
-    padding: 12px;
-    font-family: 'Courier New', monospace;
-    color: #fff;
-    z-index: 999998;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    pointer-events: none; /* Mouse tıklamasını engellemez */
-}
-
-.monitor-header {
-    font-size: 10px;
-    color: #009DFF; /* Sitedeki mavi tonu */
-    font-weight: bold;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.pulse {
-    width: 6px;
-    height: 6px;
-    background: #27c93f;
-    border-radius: 50%;
-    animation: pulse-anim 1.5s infinite;
-}
-
-@keyframes pulse-anim {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.5; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.stat-line {
-    font-size: 12px;
-    margin-bottom: 4px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.percent { color: #ffbd2e; font-weight: bold; }
-
-/* Sitenin renklerine uygun hafif bir parlama */
-#abs-monitor::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    box-shadow: inset 0 0 10px rgba(74, 20, 140, 0.3);
-    border-radius: 10px;
-}
-</style>
-
-<script>
-// Verileri rastgele oynatıp "Canlı" hissi verelim
-setInterval(() => {
-    // Enerji %98 ile %100 arası oynasın
-    const energy = 98 + Math.floor(Math.random() * 3);
-    document.getElementById('energy-val').innerText = energy + "%";
-
-    // Proje yüzdesi çok yavaş artsın
-    let pcnt = parseInt(document.getElementById('project-pcnt').innerText);
-    if(pcnt < 99 && Math.random() > 0.95) {
-        document.getElementById('project-pcnt').innerText = (pcnt + 1) + "%";
-    }
-}, 3000);
-</script><div id="abs-bubble-container">
-    <div id="abs-bubble">
-        <span id="abs-bubble-text">Sisteme bağlanıldı...</span>
-    </div>
-    <div class="abs-bubble-pointer"></div>
-</div>
 
 <style>
 /* AKILLI BALONCUK TASARIMI */
